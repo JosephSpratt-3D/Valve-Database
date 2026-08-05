@@ -36,7 +36,22 @@ function validate(type:Source,bytes:Uint8Array){let db:Database;try{db=new SQL.D
 function sessionSource(type:Source,bytes:Uint8Array){if(type==='hardware_configurator'){hardware?.close();hardware=new SQL.Database(bytes)}else{manufacturing?.close();manufacturing=new SQL.Database(bytes)}}
 async function connectGitHub(token:string){const response=await fetch('https://api.github.com/user',{headers:githubHeaders(token)});if(!response.ok)throw error('GitHub token was rejected. Use a fine-grained token with Contents read/write access.');const user=await response.json();sessionStorage.setItem(tokenKey,token);return{login:user.login}}
 function githubHeaders(token:string){return{Accept:'application/vnd.github+json',Authorization:`Bearer ${token}`,'X-GitHub-Api-Version':'2022-11-28'}}
-async function githubWrite(path:string,bytes:Uint8Array,message:string){let token=sessionStorage.getItem(tokenKey);if(!token){token=window.prompt(`Enter a fine-grained GitHub token with Contents read/write access to ${repo.owner}/${repo.repository}. It is kept only for this browser session.`)||'';if(!token)throw error('A GitHub token is required to change repository data');await connectGitHub(token)}const endpoint=`https://api.github.com/repos/${repo.owner}/${repo.repository}/contents/${path}`;const current=await fetch(`${endpoint}?ref=${encodeURIComponent(repo.branch)}`,{headers:githubHeaders(token)});let sha:string|undefined;if(current.ok)sha=(await current.json()).sha;else if(current.status!==404)throw error(`GitHub could not read ${path} (${current.status})`);const response=await fetch(endpoint,{method:'PUT',headers:{...githubHeaders(token),'Content-Type':'application/json'},body:JSON.stringify({message,content:toBase64(bytes),branch:repo.branch,...(sha?{sha}:{})})});if(!response.ok){const detail=await response.json().catch(()=>({}));throw error(detail.message||`GitHub upload failed (${response.status})`)}return response.json()}
+async function githubWrite(path:string,bytes:Uint8Array,message:string){
+ let token=sessionStorage.getItem(tokenKey);
+ if(!token){token=window.prompt(`Enter a fine-grained GitHub token with Contents read/write access to ${repo.owner}/${repo.repository}. It is kept only for this browser session.`)||'';if(!token)throw error('A GitHub token is required to change repository data');await connectGitHub(token)}
+ const endpoint=`https://api.github.com/repos/${repo.owner}/${repo.repository}/contents/${path}`;
+ const currentSha=async()=>{const current=await fetch(`${endpoint}?ref=${encodeURIComponent(repo.branch)}&cacheBust=${Date.now()}-${crypto.randomUUID()}`,{headers:{...githubHeaders(token),'Cache-Control':'no-cache'},cache:'no-store'});if(current.ok)return String((await current.json()).sha);if(current.status===404)return undefined;throw error(`GitHub could not read ${path} (${current.status})`)};
+ for(let attempt=0;attempt<2;attempt++){
+  const sha=await currentSha();
+  const response=await fetch(endpoint,{method:'PUT',headers:{...githubHeaders(token),'Content-Type':'application/json'},cache:'no-store',body:JSON.stringify({message,content:toBase64(bytes),branch:repo.branch,...(sha?{sha}:{})})});
+  if(response.ok)return response.json();
+  const detail=await response.json().catch(()=>({})) as {message?:string};
+  const staleSha=(response.status===409||response.status===422)&&/does not match|sha/i.test(detail.message||'');
+  if(staleSha&&attempt===0)continue;
+  throw error(detail.message||`GitHub upload failed (${response.status})`);
+ }
+ throw error(`GitHub could not update ${path} after refreshing its current version`);
+}
 function toBase64(bytes:Uint8Array){let binary='';for(let i=0;i<bytes.length;i+=32768)binary+=String.fromCharCode(...bytes.subarray(i,i+32768));return btoa(binary)}
 async function persistSettings(message:string){settings.updatedAt=new Date().toISOString();const result=await githubWrite(repo.settingsPath,new TextEncoder().encode(JSON.stringify(settings,null,2)+'\n'),message);localStorage.setItem(settingsKey,JSON.stringify(settings));return result.content?.sha}
 function audit(action:string,entity?:string,details?:any){const u=currentUser();settings.auditLogs.unshift({id:Date.now(),username:u?.username||'System',action,entity_type:entity||null,details:details?JSON.stringify(details):null,created_at:now()});settings.auditLogs=settings.auditLogs.slice(0,200)}
