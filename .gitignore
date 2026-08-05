@@ -1,0 +1,12 @@
+node_modules/
+dist/
+*.tsbuildinfo
+.env
+*.log
+server/data/app.db*
+server/data/active/*
+server/data/backups/*
+server/data/temporary/*
+server/data/photos/*
+server/data/demo/*
+!server/data/**/.gitkeep

@@ -1,0 +1,62 @@
+import { Router, type Request, type Response, type NextFunction } from 'express';
+import bcrypt from 'bcryptjs';
+import crypto from 'node:crypto';
+import fs from 'node:fs';
+import multer from 'multer';
+import rateLimit from 'express-rate-limit';
+import { z } from 'zod';
+import { appDb, audit } from './db/app-db.js';
+import { activePath, withSource } from './db/source.js';
+import { config, paths } from './config.js';
+import { SQLiteValveRepository } from './repositories/valve.js';
+import { SQLiteManufacturingRepository } from './repositories/manufacturing.js';
+import { LocalDatabaseSourceService } from './services/database-source.js';
+import { crossValidation } from './services/cross-validation.js';
+import type { DatabaseSourceType } from '../../shared/types/index.js';
+
+const router=Router(), valves=new SQLiteValveRepository(), manufacturing=new SQLiteManufacturingRepository(), sources=new LocalDatabaseSourceService();
+const wrap=(fn:(req:Request,res:Response)=>Promise<unknown>|unknown)=>(req:Request,res:Response,next:NextFunction)=>Promise.resolve(fn(req,res)).catch(next);
+const requireAuth=(req:Request,res:Response,next:NextFunction)=>req.session.user?next():res.status(401).json({error:'Authentication required'});
+const requireAdmin=(req:Request,res:Response,next:NextFunction)=>req.session.user?.role==='admin'?next():res.status(403).json({error:'Administrator access required'});
+const intId=z.coerce.number().int().positive();
+const credentials=z.object({username:z.string().trim().min(1).max(100),password:z.string().min(1).max(200)});
+const loginLimit=rateLimit({windowMs:15*60*1000,limit:10,standardHeaders:true,legacyHeaders:false,message:{error:'Too many login attempts; try again later'}});
+const upload=multer({dest:paths.temporary,limits:{fileSize:config.maxUploadBytes,files:1},fileFilter:(_r,f,cb)=>cb(null,/\.(db|sqlite|sqlite3)$/i.test(f.originalname))});
+
+router.get('/auth/session',(req,res)=>{req.session.csrfToken ||= crypto.randomBytes(32).toString('hex');res.json({user:req.session.user||null,csrfToken:req.session.csrfToken});});
+router.post('/auth/login',loginLimit,wrap(async(req,res)=>{const body=credentials.parse(req.body);const user=appDb.prepare('SELECT * FROM users WHERE username=?').get(body.username) as any;const ok=user?.is_active&&await bcrypt.compare(body.password,user.password_hash);if(!ok){audit(user?.id||null,'auth.login_failed','user',undefined,{username:body.username},req.ip);return res.status(401).json({error:'Invalid username or password'});}await new Promise<void>((resolve,reject)=>req.session.regenerate(e=>e?reject(e):resolve()));req.session.user={id:user.id,username:user.username,role:user.role};req.session.csrfToken=crypto.randomBytes(32).toString('hex');appDb.prepare('UPDATE users SET last_login_at=CURRENT_TIMESTAMP WHERE id=?').run(user.id);audit(user.id,'auth.login','user',String(user.id),undefined,req.ip);res.json({user:req.session.user,csrfToken:req.session.csrfToken});}));
+router.use((req,res,next)=>{if(['GET','HEAD','OPTIONS'].includes(req.method))return next();if(req.path==='/auth/login')return next();if(!req.session.csrfToken||req.get('x-csrf-token')!==req.session.csrfToken)return res.status(403).json({error:'Invalid CSRF token'});next();});
+router.post('/auth/logout',requireAuth,(req,res,next)=>{const id=req.session.user!.id;audit(id,'auth.logout','user',String(id),undefined,req.ip);req.session.destroy(e=>e?next(e):res.status(204).end());});
+
+router.use('/valves',requireAuth);
+router.get('/valves/brands',wrap(async(_q,res)=>res.json(await valves.getBrands())));
+router.get('/valves/sizes',wrap(async(req,res)=>res.json(await valves.getSizes(z.string().min(1).parse(req.query.brand)))));
+router.get('/valves/classes',wrap(async(req,res)=>res.json(await valves.getClasses(z.string().min(1).parse(req.query.brand),z.string().min(1).parse(req.query.size)))));
+router.get('/valves/models',wrap(async(req,res)=>res.json(await valves.getModels(z.string().min(1).parse(req.query.brand),z.string().min(1).parse(req.query.size),z.string().min(1).parse(req.query.class)))));
+router.get('/valves/:valveId',wrap(async(req,res)=>{const row=await valves.getValveById(intId.parse(req.params.valveId));return row?res.json(row):res.status(404).json({error:'Valve not found'});}));
+router.get('/valves/:valveId/manufacturing-summary',wrap(async(req,res)=>res.json(await manufacturing.getSummaryByValveId(intId.parse(req.params.valveId)))));
+router.get('/valves/:valveId/manufacturing-history',wrap(async(req,res)=>res.json(await manufacturing.getHistoryByValveId(intId.parse(req.params.valveId)))));
+router.get('/display-config',requireAuth,(_q,res)=>res.json({sections:appDb.prepare('SELECT * FROM display_sections WHERE is_visible=1 ORDER BY sort_order,id').all(),fields:appDb.prepare('SELECT * FROM display_fields WHERE is_visible=1 ORDER BY section_key,sort_order,id').all()}));
+
+router.use('/admin',requireAuth,requireAdmin);
+router.get('/admin/database-sources',(_q,res)=>res.json((appDb.prepare('SELECT source_type,original_file_name,file_size_bytes,uploaded_at,uploaded_by,validation_status,validation_message,integrity_check_result,record_count,schema_fingerprint FROM database_sources').all() as any[]).map(r=>({...r,validationReport:parseJson(r.validation_message)}))));
+function uploadHandler(type:DatabaseSourceType){return [upload.single('database'),wrap((req,res)=>{if(!req.file)throw Object.assign(new Error('A database file is required'),{status:400});try{return res.status(201).json(sources.activateUpload(type,req.file.path,req.file.originalname,req.session.user!.id,req.ip));}finally{fs.rmSync(req.file.path,{force:true});}})] as const;}
+router.post('/admin/database-sources/hardware-configurator/upload',...uploadHandler('hardware_configurator'));
+router.post('/admin/database-sources/manufacturing-log/upload',...uploadHandler('manufacturing_log'));
+router.post('/admin/database-sources/:sourceType/revalidate',wrap((req,res)=>res.json(sources.revalidate(z.enum(['hardware_configurator','manufacturing_log']).parse(req.params.sourceType)))));
+router.get('/admin/database-sources/cross-validation',(_q,res)=>res.json(crossValidation()));
+router.get('/admin/display-sections',(_q,res)=>res.json(appDb.prepare('SELECT * FROM display_sections ORDER BY sort_order,id').all()));
+router.post('/admin/display-sections',(req,res)=>{const b=z.object({section_key:z.string().regex(/^[a-z][a-z0-9_.-]*$/),label:z.string().min(1).max(100),sort_order:z.number().int(),is_visible:z.boolean().optional()}).parse(req.body);const x=appDb.prepare('INSERT INTO display_sections(section_key,label,sort_order,is_visible) VALUES (?,?,?,?)').run(b.section_key,b.label,b.sort_order,b.is_visible===false?0:1);audit(req.session.user!.id,'display.section.create','display_section',String(x.lastInsertRowid),b,req.ip);res.status(201).json({id:Number(x.lastInsertRowid)});});
+router.put('/admin/display-sections/:id',(req,res)=>{const id=intId.parse(req.params.id),b=z.object({label:z.string().min(1).max(100),sort_order:z.number().int(),is_visible:z.boolean()}).parse(req.body);appDb.prepare('UPDATE display_sections SET label=?,sort_order=?,is_visible=? WHERE id=?').run(b.label,b.sort_order,b.is_visible?1:0,id);audit(req.session.user!.id,'display.section.update','display_section',String(id),b,req.ip);res.json({ok:true});});
+router.get('/admin/display-fields',(_q,res)=>res.json(appDb.prepare('SELECT * FROM display_fields ORDER BY section_key,sort_order,id').all()));
+router.put('/admin/display-fields/:id',(req,res)=>{const id=intId.parse(req.params.id),b=z.object({label:z.string().min(1).max(100),section_key:z.string().min(1),sort_order:z.number().int(),is_visible:z.boolean(),is_highlighted:z.boolean(),unit:z.string().max(30).nullable(),decimal_places:z.number().int().min(0).max(10).nullable(),help_text:z.string().max(500).nullable()}).parse(req.body);appDb.prepare('UPDATE display_fields SET label=?,section_key=?,sort_order=?,is_visible=?,is_highlighted=?,unit=?,decimal_places=?,help_text=? WHERE id=?').run(b.label,b.section_key,b.sort_order,b.is_visible?1:0,b.is_highlighted?1:0,b.unit,b.decimal_places,b.help_text,id);audit(req.session.user!.id,'display.field.update','display_field',String(id),b,req.ip);res.json({ok:true});});
+router.get('/admin/users',(_q,res)=>res.json(appDb.prepare('SELECT id,username,role,is_active,last_login_at,created_at,updated_at FROM users ORDER BY username COLLATE NOCASE').all()));
+router.post('/admin/users',wrap(async(req,res)=>{const b=z.object({username:z.string().trim().min(2).max(100),password:z.string().min(12).max(200),role:z.enum(['admin','user'])}).parse(req.body);const hash=await bcrypt.hash(b.password,12);const x=appDb.prepare('INSERT INTO users(username,password_hash,role) VALUES (?,?,?)').run(b.username,hash,b.role);audit(req.session.user!.id,'user.create','user',String(x.lastInsertRowid),{username:b.username,role:b.role},req.ip);res.status(201).json({id:Number(x.lastInsertRowid)});}));
+router.put('/admin/users/:id',(req,res)=>{const id=intId.parse(req.params.id),b=z.object({role:z.enum(['admin','user']),is_active:z.boolean()}).parse(req.body);if(id===req.session.user!.id&&!b.is_active)return res.status(400).json({error:'You cannot deactivate your own account'});appDb.prepare('UPDATE users SET role=?,is_active=?,updated_at=CURRENT_TIMESTAMP WHERE id=?').run(b.role,b.is_active?1:0,id);audit(req.session.user!.id,'user.update','user',String(id),b,req.ip);res.json({ok:true});});
+router.post('/admin/users/:id/reset-password',wrap(async(req,res)=>{const id=intId.parse(req.params.id),b=z.object({password:z.string().min(12).max(200)}).parse(req.body);appDb.prepare('UPDATE users SET password_hash=?,updated_at=CURRENT_TIMESTAMP WHERE id=?').run(await bcrypt.hash(b.password,12),id);audit(req.session.user!.id,'user.password_reset','user',String(id),undefined,req.ip);res.json({ok:true});}));
+router.get('/admin/audit-logs',(req,res)=>{const limit=z.coerce.number().int().min(1).max(500).default(100).parse(req.query.limit);res.json(appDb.prepare('SELECT a.id,a.action,a.entity_type,a.entity_id,a.details,a.ip_address,a.created_at,u.username FROM audit_logs a LEFT JOIN users u ON u.id=a.user_id ORDER BY a.id DESC LIMIT ?').all(limit));});
+function reference(table:string){return (_q:Request,res:Response)=>res.json(withSource('hardware_configurator',db=>db.prepare(`SELECT * FROM "${table}" ORDER BY 1`).all()));}
+router.get('/admin/actuator-sets',reference('actuator_sets'));router.get('/admin/bracket-patterns',reference('bracket_patterns'));router.get('/admin/universal-adapters',reference('universal_adapters'));
+router.get('/admin/dashboard',(_q,res)=>{const cv=crossValidation() as any;let counts:any={};if(activePath('hardware_configurator'))counts=withSource('hardware_configurator',db=>({valveCount:(db.prepare('SELECT COUNT(*) n FROM valves').get() as any).n,keyedStemCount:(db.prepare('SELECT COUNT(*) n FROM valve_keyed_stems').get() as any).n,flatStemCount:(db.prepare('SELECT COUNT(*) n FROM valve_flat_stems').get() as any).n,actuatorSetCount:(db.prepare('SELECT COUNT(*) n FROM actuator_sets').get() as any).n,bracketPatternCount:(db.prepare('SELECT COUNT(*) n FROM bracket_patterns').get() as any).n,universalAdapterCount:(db.prepare('SELECT COUNT(*) n FROM universal_adapters').get() as any).n}));const activeUsers=(appDb.prepare('SELECT COUNT(*) n FROM users WHERE is_active=1').get() as any).n;const latestUpload=appDb.prepare('SELECT source_type,original_file_name,uploaded_at FROM database_sources ORDER BY uploaded_at DESC LIMIT 1').get()||null;const recentAudit=appDb.prepare('SELECT a.*,u.username FROM audit_logs a LEFT JOIN users u ON u.id=a.user_id ORDER BY a.id DESC LIMIT 8').all();res.json({...counts,...cv,activeUsers,latestUpload,recentAudit});});
+function parseJson(x:string|null){try{return x?JSON.parse(x):null}catch{return null}}
+export default router;

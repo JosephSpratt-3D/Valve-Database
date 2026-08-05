@@ -1,0 +1,8 @@
+import { withSource } from '../db/source.js';
+
+export const manufacturingColumns = ['id','timestamp','job_number','quantity','configuration_name','fusion_document_name','valve_id','valve_brand','valve_size','valve_class','valve_port','valve_model','actuator_name','Packing Flange','SCHA','U-Bolt','diameter reduction','stem thread','Body_Height','Hub_Height','Hub_ID','Hub_OD','actuator_bhc','actuator_bracket_center_hole','actuator_hole_dia','bracket_code','bracket_height','dia_reduction','flat_depth','flat_width','key_cross','key_width','packing_flange_angle','packing_flange_length','packing_flange_width','slot_depth','slot_width','square_height','square_size','stem_diameter','stem_height','valve_bhc','valve_bracket_center_hole','valve_hole_dia','valve_hole_qty','Adapter_OD','actuator_hole_qty','bracket_length','bracket_width','Bolt Pattern'] as const;
+const quoted = manufacturingColumns.map(c=>`"${c.replaceAll('"','""')}"`).join(',');
+export class SQLiteManufacturingRepository {
+ async getHistoryByValveId(id:number){ return withSource('manufacturing_log', db => db.prepare(`SELECT ${quoted} FROM manufacturing_log WHERE valve_id GLOB '[0-9]*' AND valve_id NOT GLOB '*[^0-9]*' AND CAST(valve_id AS INTEGER)=? ORDER BY datetime(timestamp) DESC,id DESC`).all(id) as Record<string,unknown>[]); }
+ async getSummaryByValveId(id:number){ const rows=await this.getHistoryByValveId(id); const last=rows[0]; return {lastManufacturedTimestamp:last?.timestamp??null,lastJobNumber:last?.job_number??null,lastQuantity:last?.quantity??null,lastConfigurationName:last?.configuration_name??null,lastFusionDocument:last?.fusion_document_name??null,lastActuator:last?.actuator_name??null,totalManufacturingRuns:rows.length}; }
+}
