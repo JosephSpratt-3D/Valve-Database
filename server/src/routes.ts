@@ -2,6 +2,7 @@ import { Router, type Request, type Response, type NextFunction } from 'express'
 import bcrypt from 'bcryptjs';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
+import path from 'node:path';
 import multer from 'multer';
 import rateLimit from 'express-rate-limit';
 import { z } from 'zod';
@@ -12,6 +13,7 @@ import { SQLiteValveRepository } from './repositories/valve.js';
 import { SQLiteManufacturingRepository } from './repositories/manufacturing.js';
 import { LocalDatabaseSourceService } from './services/database-source.js';
 import { crossValidation } from './services/cross-validation.js';
+import { createDemoDatabases } from './scripts/create-demo.js';
 import type { DatabaseSourceType } from '../../shared/types/index.js';
 
 const router=Router(), valves=new SQLiteValveRepository(), manufacturing=new SQLiteManufacturingRepository(), sources=new LocalDatabaseSourceService();
@@ -24,8 +26,10 @@ const loginLimit=rateLimit({windowMs:15*60*1000,limit:10,standardHeaders:true,le
 const upload=multer({dest:paths.temporary,limits:{fileSize:config.maxUploadBytes,files:1},fileFilter:(_r,f,cb)=>cb(null,/\.(db|sqlite|sqlite3)$/i.test(f.originalname))});
 
 router.get('/auth/session',(req,res)=>{req.session.csrfToken ||= crypto.randomBytes(32).toString('hex');res.json({user:req.session.user||null,csrfToken:req.session.csrfToken});});
+router.get('/auth/setup-status',(_req,res)=>res.json({required:(appDb.prepare('SELECT COUNT(*) n FROM users').get() as {n:number}).n===0}));
 router.post('/auth/login',loginLimit,wrap(async(req,res)=>{const body=credentials.parse(req.body);const user=appDb.prepare('SELECT * FROM users WHERE username=?').get(body.username) as any;const ok=user?.is_active&&await bcrypt.compare(body.password,user.password_hash);if(!ok){audit(user?.id||null,'auth.login_failed','user',undefined,{username:body.username},req.ip);return res.status(401).json({error:'Invalid username or password'});}await new Promise<void>((resolve,reject)=>req.session.regenerate(e=>e?reject(e):resolve()));req.session.user={id:user.id,username:user.username,role:user.role};req.session.csrfToken=crypto.randomBytes(32).toString('hex');appDb.prepare('UPDATE users SET last_login_at=CURRENT_TIMESTAMP WHERE id=?').run(user.id);audit(user.id,'auth.login','user',String(user.id),undefined,req.ip);res.json({user:req.session.user,csrfToken:req.session.csrfToken});}));
 router.use((req,res,next)=>{if(['GET','HEAD','OPTIONS'].includes(req.method))return next();if(req.path==='/auth/login')return next();if(!req.session.csrfToken||req.get('x-csrf-token')!==req.session.csrfToken)return res.status(403).json({error:'Invalid CSRF token'});next();});
+router.post('/auth/setup',loginLimit,wrap(async(req,res)=>{const count=(appDb.prepare('SELECT COUNT(*) n FROM users').get() as {n:number}).n;if(count)return res.status(409).json({error:'Initial setup has already been completed'});const body=z.object({username:z.string().trim().min(2).max(100),password:z.string().min(12).max(200)}).parse(req.body);const hash=await bcrypt.hash(body.password,12);const result=appDb.prepare("INSERT INTO users(username,password_hash,role) VALUES (?,?,'admin')").run(body.username,hash);const id=Number(result.lastInsertRowid);await new Promise<void>((resolve,reject)=>req.session.regenerate(e=>e?reject(e):resolve()));req.session.user={id,username:body.username,role:'admin'};req.session.csrfToken=crypto.randomBytes(32).toString('hex');audit(id,'system.initial_setup','user',String(id),{username:body.username},req.ip);res.status(201).json({user:req.session.user,csrfToken:req.session.csrfToken});}));
 router.post('/auth/logout',requireAuth,(req,res,next)=>{const id=req.session.user!.id;audit(id,'auth.logout','user',String(id),undefined,req.ip);req.session.destroy(e=>e?next(e):res.status(204).end());});
 
 router.use('/valves',requireAuth);
@@ -45,6 +49,7 @@ router.post('/admin/database-sources/hardware-configurator/upload',...uploadHand
 router.post('/admin/database-sources/manufacturing-log/upload',...uploadHandler('manufacturing_log'));
 router.post('/admin/database-sources/:sourceType/revalidate',wrap((req,res)=>res.json(sources.revalidate(z.enum(['hardware_configurator','manufacturing_log']).parse(req.params.sourceType)))));
 router.get('/admin/database-sources/cross-validation',(_q,res)=>res.json(crossValidation()));
+router.post('/admin/database-sources/load-demo',wrap((req,res)=>{const directory=path.join(paths.temporary,`demo-${crypto.randomUUID()}`);try{const files=createDemoDatabases(directory);const hardwareReport=sources.activateUpload('hardware_configurator',files.hardware,'demo-hardware-configurator.db',req.session.user!.id,req.ip);const manufacturingReport=sources.activateUpload('manufacturing_log',files.manufacturing,'demo-manufacturing-log.db',req.session.user!.id,req.ip);audit(req.session.user!.id,'database.demo_loaded','database_source',undefined,undefined,req.ip);res.status(201).json({hardwareReport,manufacturingReport,crossValidation:crossValidation()});}finally{fs.rmSync(directory,{recursive:true,force:true});}}));
 router.get('/admin/display-sections',(_q,res)=>res.json(appDb.prepare('SELECT * FROM display_sections ORDER BY sort_order,id').all()));
 router.post('/admin/display-sections',(req,res)=>{const b=z.object({section_key:z.string().regex(/^[a-z][a-z0-9_.-]*$/),label:z.string().min(1).max(100),sort_order:z.number().int(),is_visible:z.boolean().optional()}).parse(req.body);const x=appDb.prepare('INSERT INTO display_sections(section_key,label,sort_order,is_visible) VALUES (?,?,?,?)').run(b.section_key,b.label,b.sort_order,b.is_visible===false?0:1);audit(req.session.user!.id,'display.section.create','display_section',String(x.lastInsertRowid),b,req.ip);res.status(201).json({id:Number(x.lastInsertRowid)});});
 router.put('/admin/display-sections/:id',(req,res)=>{const id=intId.parse(req.params.id),b=z.object({label:z.string().min(1).max(100),sort_order:z.number().int(),is_visible:z.boolean()}).parse(req.body);appDb.prepare('UPDATE display_sections SET label=?,sort_order=?,is_visible=? WHERE id=?').run(b.label,b.sort_order,b.is_visible?1:0,id);audit(req.session.user!.id,'display.section.update','display_section',String(id),b,req.ip);res.json({ok:true});});

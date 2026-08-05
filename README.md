@@ -33,7 +33,7 @@ Requires Node.js 20+ and npm.
 ```bash
 npm install
 cp .env.example .env
-# Edit .env before first launch.
+# Editing .env is recommended; browser-based first-run setup is also available.
 npm run demo
 npm run dev
 ```
@@ -67,13 +67,13 @@ The production server serves `client/dist`; run `npm start` from the repository 
 
 ### Initial administrator
 
-On the first launch, when `users` is empty, the server creates the administrator from `INITIAL_ADMIN_USERNAME` and `INITIAL_ADMIN_PASSWORD`. Credentials are not hard-coded. If the application database already has users, changing these variables does not overwrite them.
+On the first launch, when `users` is empty, the server creates the administrator from `INITIAL_ADMIN_USERNAME` and `INITIAL_ADMIN_PASSWORD`. If those variables are not set, `/login` becomes a secure first-run setup form where you create the administrator yourself. Credentials are never hard-coded. If the application database already has users, changing these variables does not overwrite them.
 
 ## Upload databases
 
 1. Sign in as an administrator.
 2. Open **Administration → Databases**.
-3. Upload a `.db`, `.sqlite`, or `.sqlite3` file in its corresponding card.
+3. Upload a `.db`, `.sqlite`, or `.sqlite3` file in its corresponding card, or click **Load working demo** to activate both fictional sources immediately.
 4. Review the integrity, schema, row-count, and data-integrity report.
 5. Once both are active, review the cross-database report.
 
