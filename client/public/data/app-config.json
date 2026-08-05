@@ -1,0 +1,8 @@
+{
+  "owner": "JosephSpratt-3D",
+  "repository": "Valve-Database",
+  "branch": "main",
+  "settingsPath": "client/public/data/settings.json",
+  "hardwarePath": "client/public/data/active/hardware_configurator.db",
+  "manufacturingPath": "client/public/data/active/manufacturing_log.db"
+}

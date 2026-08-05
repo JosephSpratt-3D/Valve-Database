@@ -4,11 +4,10 @@
   "type": "module",
   "workspaces": ["client", "server"],
   "scripts": {
-    "dev": "concurrently -n server,client -c blue,green \"npm run dev -w server\" \"npm run dev -w client\"",
-    "build": "npm run build -w server && npm run build -w client",
+    "dev": "npm run dev -w client",
+    "build": "npm run build -w client",
     "test": "npm test -w server",
-    "demo": "npm run demo -w server",
-    "start": "npm start -w server"
-  },
-  "devDependencies": {"concurrently": "^9.1.2"}
+    "demo": "node --import tsx server/src/scripts/create-demo.ts client/public/data/demo",
+    "start": "npm run preview -w client"
+  }
 }

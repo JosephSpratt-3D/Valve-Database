@@ -1,103 +1,95 @@
 # Valve Database Viewer
 
-A complete local React/Express application for securely browsing valve configuration and manufacturing history stored in two externally managed SQLite databases. Uploaded source databases are never modified; application state lives separately in `server/data/app.db`.
+Valve Database Viewer is a browser-only GitHub Pages application for viewing the two known Fusion 360 configurator SQLite schemas. It does not require an application server.
 
-## Architecture
+Live site after Pages is enabled:
 
-- **React + TypeScript + Vite** client with protected viewer and role-restricted administration routes.
-- **Express + TypeScript** API with Helmet, strict-origin CORS, Zod validation, login throttling, session regeneration, HTTP-only cookies, and session-bound CSRF tokens.
-- **SQLite application database** for users, session storage, source metadata, display configuration, audit events, settings, and future photo metadata.
-- **Read-only source repositories** for hardware and manufacturing databases. Repository interfaces isolate components from storage and permit a future Supabase implementation.
-- **Upload pipeline** uses random temporary names, SQLite integrity and exact-column checks, domain integrity reports, backups, and atomic activation.
+`https://josephspratt-3d.github.io/Valve-Database/`
 
-## Project tree
+## How the GitHub Pages version works
 
-```text
-client/                 React application
-  src/                  routes, UI, API client, styling
-server/
-  src/db/               application/source database access
-  src/repositories/     read-only source repositories
-  src/services/         validation, activation, cross-validation
-  src/scripts/          exact schemas and demo generator
-  src/tests/            integration and security tests
-  data/                  ignored local application/source data
-shared/types/           shared domain contracts
-docs/                   migration documentation
-```
+- SQLite runs inside the browser through `sql.js` WebAssembly.
+- The public active databases live at `client/public/data/active/`.
+- Accounts, display configuration, source metadata, and audit events live in `client/public/data/settings.json`.
+- Administrator writes use GitHub's Contents API and create normal commits on `main`.
+- The supplied GitHub Actions workflow rebuilds and redeploys Pages after each commit.
+- A fine-grained GitHub token is kept only in `sessionStorage`. It is never written into the repository or build output.
+- Database bytes are also cached in IndexedDB so an upload works immediately while Pages redeploys.
 
-## Install and run
+## Enable GitHub Pages
 
-Requires Node.js 20+ and npm.
+1. Open the repository on GitHub.
+2. Select **Settings → Pages**.
+3. Under **Build and deployment**, choose **GitHub Actions** as the source.
+4. Open **Actions → Deploy GitHub Pages** and run the workflow, or push to `main`.
+5. After deployment, open the live URL above—not the repository URL.
+
+The repository URL displays this README by design. The application URL uses the `github.io` domain.
+
+## First-run setup
+
+The committed settings file initially has no users. On the deployed `/login` screen:
+
+1. Enter the first administrator username and a password of at least 12 characters.
+2. Enter a fine-grained GitHub personal access token.
+3. Submit the form. The application hashes the password and commits the administrator record to `client/public/data/settings.json`.
+
+Create the token at GitHub under **Settings → Developer settings → Personal access tokens → Fine-grained tokens**. Restrict it to `JosephSpratt-3D/Valve-Database` and grant:
+
+- **Contents: Read and write**
+- **Metadata: Read-only**
+
+The account password hash is public and the client-side login can be bypassed by a knowledgeable visitor. This login is an intentional convenience gate, not secure access control.
+
+## Upload source databases
+
+Sign in as an administrator and open **Databases**. Selecting a database performs browser-side SQLite/schema validation, then commits it to:
+
+- `client/public/data/active/hardware_configurator.db`
+- `client/public/data/active/manufacturing_log.db`
+
+The application supports `.db`, `.sqlite`, and `.sqlite3` files up to 50 MB. Because this is a public repository, uploaded databases and settings are publicly downloadable.
+
+Use **Load working demo** to commit both included fictional demo databases. The demo contains keyed and flat valves, multiple sizes/classes, manufacturing history, unit-bearing text, a valve with no history, and an intentional historical model mismatch linked by `valve_id`.
+
+GitHub Pages may take a minute or two to redeploy after a commit. The current browser uses its IndexedDB copy immediately.
+
+## Local development
 
 ```bash
 npm install
-cp .env.example .env
-# Editing .env is recommended; browser-based first-run setup is also available.
-npm run demo
 npm run dev
 ```
 
-Development URLs:
+Open `http://localhost:5173`. Repository writes still target the configured GitHub repository and require a fine-grained token.
 
-- Client: `http://localhost:5173`
-- API: `http://localhost:3001/api`
-
-For a production build:
+Build the exact static site with:
 
 ```bash
-npm run build
-NODE_ENV=production npm start
+GITHUB_ACTIONS=true npm run build
+npm start
 ```
 
-The production server serves `client/dist`; run `npm start` from the repository root.
+## Project layout
 
-## Environment variables
-
-| Name | Purpose | Default |
-|---|---|---|
-| `PORT` | Express port | `3001` |
-| `CLIENT_ORIGIN` | Only allowed browser origin | `http://localhost:5173` |
-| `SESSION_SECRET` | Cookie-session signing secret; use 32+ random characters | development-only fallback |
-| `INITIAL_ADMIN_USERNAME` | First administrator username | none |
-| `INITIAL_ADMIN_PASSWORD` | First administrator password (minimum 12 characters) | none |
-| `MAX_UPLOAD_MB` | Multipart database size limit | `100` |
-| `NODE_ENV` | Set to `production` for secure cookies and static client serving | `development` |
-| `DATA_DIR` | Optional data location override, useful for tests/deployment | `server/data` |
-
-### Initial administrator
-
-On the first launch, when `users` is empty, the server creates the administrator from `INITIAL_ADMIN_USERNAME` and `INITIAL_ADMIN_PASSWORD`. If those variables are not set, `/login` becomes a secure first-run setup form where you create the administrator yourself. Credentials are never hard-coded. If the application database already has users, changing these variables does not overwrite them.
-
-## Upload databases
-
-1. Sign in as an administrator.
-2. Open **Administration → Databases**.
-3. Upload a `.db`, `.sqlite`, or `.sqlite3` file in its corresponding card, or click **Load working demo** to activate both fictional sources immediately.
-4. Review the integrity, schema, row-count, and data-integrity report.
-5. Once both are active, review the cross-database report.
-
-The original filename is display metadata only. The upload is stored at a random temporary path, validated without writes, copied to a staged path, and atomically renamed. A failed upload cannot replace the active source. Previous active files are copied to `server/data/backups/` before replacement.
-
-Generated demonstration sources are written to `server/data/demo/`. Upload `hardware_configurator.db` first and then `manufacturing_log.db`. They include keyed and flat valves, numeric-like selector sorting, repeated manufacturing, a valve without history, unit-bearing fields, and an intentionally different historical model snapshot tied to the correct `valve_id`.
-
-## Tests
-
-```bash
-npm test
-npm run build
+```text
+.github/workflows/pages.yml       GitHub Pages deployment
+client/src/local-backend.ts       Browser SQLite, login, and GitHub API layer
+client/src/main.tsx                Viewer and administration interface
+client/public/data/settings.json   Repository-local accounts and settings
+client/public/data/active/         Active public SQLite databases
+client/public/data/demo/           Fictional bundled databases
+server/                            Legacy local-server code and schema generator
 ```
 
-The integration suite generates real SQLite databases from the specified schemas and covers validation failures, safe activation, stem joins, cascading selectors, numeric sorting, ID-based history, preserved unit strings and historical differences, authorization, CSRF, password-hash secrecy, and filename containment.
+## Important limitations
 
-## Known limitations
+- The static login does not protect public files or provide real authorization.
+- Password hashes and account names are public repository data.
+- Anyone with a suitable repository token can write repository contents.
+- Settings and database uploads create Git commits and trigger Pages builds.
+- GitHub API rate limits and repository file-size limits apply.
+- Concurrent administrators can overwrite each other's settings changes.
+- HTTP-only sessions, server-side CSRF protection, private database storage, and secure password recovery are impossible on GitHub Pages alone.
 
-- Photo storage has a complete metadata schema and reserved local directory, but this version does not expose photo upload UI/API.
-- Timestamps are parsed as browser-local time. There is no configurable installation timezone yet; invalid source timestamps remain visible and are labeled invalid.
-- Presentation ordering uses explicit integer order values instead of drag-and-drop.
-- Source queries open short-lived read-only connections, favoring safe database replacement over connection pooling.
-- Backups require administrator-managed retention; automatic pruning is intentionally absent.
-
-## Supabase migration
-
-See [docs/SUPABASE-MIGRATION.md](docs/SUPABASE-MIGRATION.md). The migration replaces repository/service implementations while retaining their contracts, API payloads, stable field keys, and React routes.
+The former Express implementation remains in `server/` as a local/private deployment option and provides the exact demo schema generator, but it is not used by the GitHub Pages runtime.
