@@ -14,7 +14,7 @@ Use a fine-grained token limited to this repository with `Contents: Read and wri
 - `GET /repos/{owner}/{repo}/contents/{path}` to find the current blob SHA;
 - `PUT /repos/{owner}/{repo}/contents/{path}` to create commits.
 
-The token is held in browser `sessionStorage` and disappears when the browser session ends. An administrator is prompted again when a repository write is attempted without a token.
+The token is held in browser `localStorage` until the site's browser data is cleared or the token is rejected. An administrator is prompted again when a repository write is attempted without a saved token.
 
 ## Deployment timing
 

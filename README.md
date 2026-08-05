@@ -13,7 +13,7 @@ Live site after Pages is enabled:
 - Accounts, display configuration, source metadata, and audit events live in `client/public/data/settings.json`.
 - Administrator writes use GitHub's Contents API and create normal commits on `main`.
 - The supplied GitHub Actions workflow rebuilds and redeploys Pages after each commit.
-- A fine-grained GitHub token is kept only in `sessionStorage`. It is never written into the repository or build output.
+- A fine-grained GitHub token is kept in this browser's `localStorage` so it survives restarts. It is never written into the repository or build output.
 - Database bytes are also cached in IndexedDB so an upload works immediately while Pages redeploys.
 
 ## Enable GitHub Pages
