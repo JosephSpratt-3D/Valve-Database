@@ -7,21 +7,22 @@ public sealed class MainForm : Form
     private static readonly Color Charcoal = Color.FromArgb(37, 36, 41), PanelColor = Color.FromArgb(47, 46, 51), FieldColor = Color.FromArgb(30, 30, 33), Teal = Color.FromArgb(7, 157, 170), Muted = Color.FromArgb(166, 173, 176), Border = Color.FromArgb(70, 69, 75);
     private readonly AppConfig _config = AppConfig.Load();
     private readonly SyncService _sync;
-    private readonly TextBox _hardwarePath = new(), _manufacturingPath = new(), _owner = new(), _repository = new(), _branch = new();
+    private readonly TextBox _hardwarePath = new(), _manufacturingPath = new(), _owner = new(), _repository = new(), _branch = new(), _token = new();
     private readonly NumericUpDown _interval = new(), _stable = new();
-    private readonly CheckBox _automatic = new(), _startup = new();
+    private readonly CheckBox _automatic = new(), _startup = new(), _showToken = new();
     private readonly Label _hardwareStatus = new(), _manufacturingStatus = new(), _globalStatus = new();
     private readonly Button _syncAllButton;
     private readonly System.Windows.Forms.Timer _timer = new();
     private readonly NotifyIcon _tray;
     private bool _exitRequested, _busy, _loading;
+    private string _storedToken = "";
 
     public MainForm()
     {
         _sync = new SyncService(_config);
         _sync.StatusChanged += message => Ui(() => SetGlobalStatus(message, false));
         AppLog.Written += line => Debug.WriteLine(line);
-        Text = "CVS Controls · Valve Database Uploader"; MinimumSize = new Size(920, 700); ClientSize = new Size(1080, 760); StartPosition = FormStartPosition.CenterScreen; BackColor = Charcoal; ForeColor = Color.White; Font = new Font("Segoe UI", 9);
+        Text = "CVS Controls · Valve Database Uploader"; MinimumSize = new Size(1040, 760); ClientSize = new Size(1180, 820); StartPosition = FormStartPosition.CenterScreen; BackColor = Charcoal; ForeColor = Color.White; Font = new Font("Segoe UI", 9);
         Icon = Icon.ExtractAssociatedIcon(Environment.ProcessPath!) ?? SystemIcons.Application;
 
         var root = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 1 };
@@ -51,13 +52,16 @@ public sealed class MainForm : Form
 
     private Control BuildContent()
     {
-        var scroll = new Panel { Dock = DockStyle.Fill, AutoScroll = true, Padding = new Padding(30, 24, 30, 30) };
-        var content = new TableLayoutPanel { Dock = DockStyle.Top, AutoSize = true, ColumnCount = 1, RowCount = 8 };
-        var title = new Label { Text = "Database synchronization", AutoSize = true, Font = new Font("Segoe UI", 22, FontStyle.Bold), Margin = new Padding(0, 0, 0, 4) };
+        var scroll = new Panel { Dock = DockStyle.Fill, AutoScroll = true, Padding = new Padding(34, 28, 34, 34) };
+        var content = new TableLayoutPanel { Dock = DockStyle.Top, AutoSize = true, ColumnCount = 1, RowCount = 7 };
+        var title = new Label { Text = "Database synchronization", AutoSize = true, Font = new Font("Segoe UI Semibold", 22, FontStyle.Bold), Margin = new Padding(0, 0, 0, 5) };
         var subtitle = new Label { Text = "Select the live database files, validate them, and keep GitHub Pages current.", AutoSize = true, ForeColor = Muted, Margin = new Padding(0, 0, 0, 22) };
         content.Controls.Add(title); content.Controls.Add(subtitle);
-        content.Controls.Add(DatabaseCard("Hardware database", "Valve configuration, actuator, and bracket source", _hardwarePath, _hardwareStatus, DatabaseKind.Hardware));
-        content.Controls.Add(DatabaseCard("Manufacturing log", "Manufacturing history and job source", _manufacturingPath, _manufacturingStatus, DatabaseKind.Manufacturing));
+        var databases = new TableLayoutPanel { Dock = DockStyle.Top, Height = 226, ColumnCount = 2, RowCount = 1, Margin = new Padding(0, 0, 0, 16) };
+        databases.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50)); databases.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
+        var hardware = DatabaseCard("Hardware database", "Valve configuration, actuator, and bracket source", _hardwarePath, _hardwareStatus, DatabaseKind.Hardware); hardware.Margin = new Padding(0, 0, 8, 0);
+        var manufacturing = DatabaseCard("Manufacturing log", "Manufacturing history and job source", _manufacturingPath, _manufacturingStatus, DatabaseKind.Manufacturing); manufacturing.Margin = new Padding(8, 0, 0, 0);
+        databases.Controls.Add(hardware, 0, 0); databases.Controls.Add(manufacturing, 1, 0); content.Controls.Add(databases);
         content.Controls.Add(GitHubCard()); content.Controls.Add(AutomationCard());
 
         var footer = new Panel { Height = 74, Dock = DockStyle.Top, Margin = new Padding(0, 10, 0, 0) };
@@ -71,27 +75,38 @@ public sealed class MainForm : Form
     private Control DatabaseCard(string title, string subtitle, TextBox pathBox, Label status, DatabaseKind kind)
     {
         StyleTextBox(pathBox); pathBox.Dock = DockStyle.Fill;
-        var card = Card(174); var inner = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 3, RowCount = 4 };
-        inner.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100)); inner.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 100)); inner.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 105));
+        var card = Card(226); var inner = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 5 };
+        inner.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100)); inner.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 108));
+        inner.RowStyles.Add(new RowStyle(SizeType.Absolute, 26)); inner.RowStyles.Add(new RowStyle(SizeType.Absolute, 38)); inner.RowStyles.Add(new RowStyle(SizeType.Absolute, 42)); inner.RowStyles.Add(new RowStyle(SizeType.Absolute, 46)); inner.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
         var heading = new Label { Text = title, AutoSize = true, Font = new Font("Segoe UI", 12, FontStyle.Bold), Margin = new Padding(0, 0, 0, 2) };
         var copy = new Label { Text = subtitle, AutoSize = true, ForeColor = Muted, Margin = new Padding(0, 0, 0, 12) };
-        inner.Controls.Add(heading, 0, 0); inner.SetColumnSpan(heading, 3); inner.Controls.Add(copy, 0, 1); inner.SetColumnSpan(copy, 3);
-        inner.Controls.Add(pathBox, 0, 2);
-        var browse = StyledButton("Browse…", false); browse.Dock = DockStyle.Fill; browse.Margin = new Padding(8, 0, 0, 0); browse.Click += (_, _) => SelectDatabase(pathBox); inner.Controls.Add(browse, 1, 2);
-        var validate = StyledButton("Validate", false); validate.Dock = DockStyle.Fill; validate.Margin = new Padding(8, 0, 0, 0); validate.Click += async (_, _) => await ValidateAsync(kind); inner.Controls.Add(validate, 2, 2);
-        status.Text = "Not checked"; status.ForeColor = Muted; status.AutoSize = true; status.Margin = new Padding(0, 12, 0, 0); inner.Controls.Add(status, 0, 3); inner.SetColumnSpan(status, 3);
+        inner.Controls.Add(heading, 0, 0); inner.SetColumnSpan(heading, 2); inner.Controls.Add(copy, 0, 1); inner.SetColumnSpan(copy, 2);
+        inner.Controls.Add(pathBox, 0, 2); inner.SetColumnSpan(pathBox, 2);
+        var browse = StyledButton("Choose file", false); browse.Dock = DockStyle.Fill; browse.Margin = new Padding(0, 7, 8, 0); browse.Click += (_, _) => SelectDatabase(pathBox); inner.Controls.Add(browse, 0, 3);
+        var validate = StyledButton("Validate", false); validate.Dock = DockStyle.Fill; validate.Margin = new Padding(0, 7, 0, 0); validate.Click += async (_, _) => await ValidateAsync(kind); inner.Controls.Add(validate, 1, 3);
+        status.Text = "Not checked"; status.ForeColor = Muted; status.AutoSize = true; status.Margin = new Padding(0, 13, 0, 0); inner.Controls.Add(status, 0, 4); inner.SetColumnSpan(status, 2);
         card.Controls.Add(inner); return card;
     }
 
     private Control GitHubCard()
     {
-        var card = Card(188); var inner = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 4, RowCount = 4 };
-        inner.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 48)); inner.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 32)); inner.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20)); inner.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 120));
-        var heading = new Label { Text = "GitHub connection", AutoSize = true, Font = new Font("Segoe UI", 12, FontStyle.Bold) }; inner.Controls.Add(heading, 0, 0); inner.SetColumnSpan(heading, 4);
+        var card = Card(250); var inner = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 4, RowCount = 4 };
+        inner.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 43)); inner.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 35)); inner.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 22)); inner.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 150));
+        inner.RowStyles.Add(new RowStyle(SizeType.Absolute, 31)); inner.RowStyles.Add(new RowStyle(SizeType.Absolute, 66)); inner.RowStyles.Add(new RowStyle(SizeType.Absolute, 65)); inner.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+        var heading = new Label { Text = "GitHub connection", AutoSize = true, Font = new Font("Segoe UI Semibold", 12, FontStyle.Bold) }; inner.Controls.Add(heading, 0, 0); inner.SetColumnSpan(heading, 4);
         AddField(inner, "Owner", _owner, 0, 1); AddField(inner, "Repository", _repository, 1, 1); AddField(inner, "Branch", _branch, 2, 1);
-        var token = StyledButton("Set token", true); token.Dock = DockStyle.Bottom; token.Margin = new Padding(8, 20, 0, 0); token.Click += (_, _) => SetToken(); inner.Controls.Add(token, 3, 1);
-        var hint = new Label { Text = "Fine-grained token · selected repository only · Contents read/write", AutoSize = true, ForeColor = Muted, Margin = new Padding(0, 12, 0, 0) }; inner.Controls.Add(hint, 0, 3); inner.SetColumnSpan(hint, 3);
-        var test = StyledButton("Test connection", false); test.Dock = DockStyle.Fill; test.Margin = new Padding(8, 10, 0, 0); test.Click += async (_, _) => await TestConnectionAsync(); inner.Controls.Add(test, 3, 3); card.Controls.Add(inner); return card;
+        var test = StyledButton("Test connection", false); test.Dock = DockStyle.Fill; test.Margin = new Padding(10, 22, 0, 4); test.Click += async (_, _) => await TestConnectionAsync(); inner.Controls.Add(test, 3, 1);
+
+        var tokenWrapper = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 2, Margin = new Padding(0, 4, 10, 0) };
+        tokenWrapper.RowStyles.Add(new RowStyle(SizeType.Absolute, 20)); tokenWrapper.RowStyles.Add(new RowStyle(SizeType.Absolute, 36));
+        tokenWrapper.Controls.Add(new Label { Text = "PERSONAL ACCESS TOKEN", AutoSize = true, ForeColor = Muted, Font = new Font("Segoe UI", 8, FontStyle.Bold) });
+        StyleTextBox(_token); _token.Dock = DockStyle.Fill; _token.UseSystemPasswordChar = true; tokenWrapper.Controls.Add(_token);
+        inner.Controls.Add(tokenWrapper, 0, 2); inner.SetColumnSpan(tokenWrapper, 3);
+        var saveToken = StyledButton("Save token", true); saveToken.Dock = DockStyle.Fill; saveToken.Margin = new Padding(0, 24, 0, 5); saveToken.Click += (_, _) => SaveToken(); inner.Controls.Add(saveToken, 3, 2);
+
+        var hint = new Label { Text = "Stored locally in Windows Credential Manager — never added to the repository.", AutoSize = true, ForeColor = Muted, Margin = new Padding(0, 9, 0, 0) }; inner.Controls.Add(hint, 0, 3); inner.SetColumnSpan(hint, 3);
+        _showToken.Text = "Show token"; StyleCheck(_showToken); _showToken.Margin = new Padding(10, 7, 0, 0); _showToken.CheckedChanged += (_, _) => _token.UseSystemPasswordChar = !_showToken.Checked; inner.Controls.Add(_showToken, 3, 3);
+        card.Controls.Add(inner); return card;
     }
 
     private Control AutomationCard()
@@ -106,10 +121,10 @@ public sealed class MainForm : Form
         var log = StyledButton("Open log", false); log.AutoSize = true; log.Margin = new Padding(0, 10, 0, 0); log.Click += (_, _) => { Directory.CreateDirectory(AppConfig.DataDirectory); if (!File.Exists(AppConfig.LogPath)) File.WriteAllText(AppConfig.LogPath, ""); Process.Start(new ProcessStartInfo(AppConfig.LogPath) { UseShellExecute = true }); }; inner.Controls.Add(log, 3, 2); card.Controls.Add(inner); return card;
     }
 
-    private Panel Card(int height) => new() { Dock = DockStyle.Top, Height = height, BackColor = PanelColor, Padding = new Padding(20), Margin = new Padding(0, 0, 0, 14) };
-    private static void StyleTextBox(TextBox box) { box.BackColor = FieldColor; box.ForeColor = Color.White; box.BorderStyle = BorderStyle.FixedSingle; box.Font = new Font("Segoe UI", 9); box.Margin = new Padding(0, 4, 0, 0); }
+    private Panel Card(int height) => new() { Dock = DockStyle.Fill, Height = height, BackColor = PanelColor, Padding = new Padding(22), Margin = new Padding(0, 0, 0, 16) };
+    private static void StyleTextBox(TextBox box) { box.BackColor = FieldColor; box.ForeColor = Color.White; box.BorderStyle = BorderStyle.FixedSingle; box.Font = new Font("Segoe UI", 9.5f); box.Margin = new Padding(0, 4, 0, 0); }
     private static void StyleCheck(CheckBox box) { box.ForeColor = Color.White; box.AutoSize = true; box.Margin = new Padding(0, 16, 0, 0); }
-    private static Button StyledButton(string text, bool primary) => new() { Text = text, FlatStyle = FlatStyle.Flat, BackColor = primary ? Teal : Color.FromArgb(58, 57, 62), ForeColor = Color.White, FlatAppearance = { BorderColor = primary ? Teal : Border }, Cursor = Cursors.Hand, Padding = new Padding(8, 4, 8, 4) };
+    private static Button StyledButton(string text, bool primary) => new() { Text = text, FlatStyle = FlatStyle.Flat, BackColor = primary ? Teal : Color.FromArgb(58, 57, 62), ForeColor = Color.White, Font = new Font("Segoe UI Semibold", 9, FontStyle.Bold), FlatAppearance = { BorderColor = primary ? Teal : Border, BorderSize = 1 }, Cursor = Cursors.Hand, Padding = new Padding(8, 3, 8, 3), UseVisualStyleBackColor = false };
     private static void AddField(TableLayoutPanel panel, string label, TextBox box, int column, int row) { var wrapper = new TableLayoutPanel { Dock = DockStyle.Fill, RowCount = 2, Margin = new Padding(0, 10, 8, 0) }; wrapper.Controls.Add(new Label { Text = label.ToUpperInvariant(), AutoSize = true, ForeColor = Muted, Font = new Font("Segoe UI", 8, FontStyle.Bold) }); StyleTextBox(box); box.Dock = DockStyle.Fill; wrapper.Controls.Add(box); panel.Controls.Add(wrapper, column, row); }
     private static void AddNumericField(TableLayoutPanel panel, string label, NumericUpDown input, int column) { var wrapper = new TableLayoutPanel { Dock = DockStyle.Fill, RowCount = 2, Margin = new Padding(8, 8, 0, 0) }; wrapper.Controls.Add(new Label { Text = label.ToUpperInvariant(), AutoSize = true, ForeColor = Muted, Font = new Font("Segoe UI", 8, FontStyle.Bold) }); input.BackColor = FieldColor; input.ForeColor = Color.White; input.BorderStyle = BorderStyle.FixedSingle; input.Dock = DockStyle.Top; input.ValueChanged += (_, _) => { }; wrapper.Controls.Add(input); panel.Controls.Add(wrapper, column, 1); }
 
@@ -117,6 +132,7 @@ public sealed class MainForm : Form
     {
         _loading = true;
         _hardwarePath.Text = _config.HardwareDatabasePath; _manufacturingPath.Text = _config.ManufacturingDatabasePath; _owner.Text = _config.RepositoryOwner; _repository.Text = _config.RepositoryName; _branch.Text = _config.Branch;
+        _storedToken = CredentialStore.Read() ?? ""; _token.Text = _storedToken;
         _interval.Value = Math.Clamp(_config.CheckIntervalMinutes, 1, 1440); _stable.Value = Math.Clamp(_config.StableSeconds, 10, 3600); _automatic.Checked = _config.AutomaticSync; _startup.Checked = _config.StartWithWindows;
         _loading = false;
         UpdateLastStatuses();
@@ -154,17 +170,19 @@ public sealed class MainForm : Form
 
     private async Task TestConnectionAsync()
     {
-        SaveControls(); SetBusy(true);
+        SaveControls();
+        if (!string.IsNullOrWhiteSpace(_token.Text) && _token.Text.Trim() != _storedToken) SaveToken();
+        SetBusy(true);
         try { var repository = await _sync.TestGitHubAsync(); SetGlobalStatus($"Connected to {repository}.", false); }
         catch (Exception exception) { SetGlobalStatus(exception.Message, true); }
         finally { SetBusy(false); }
     }
 
-    private void SetToken()
+    private void SaveToken()
     {
-        using var dialog = new TokenDialog();
-        if (dialog.ShowDialog(this) != DialogResult.OK || string.IsNullOrWhiteSpace(dialog.Token)) return;
-        try { CredentialStore.Save(dialog.Token); SetGlobalStatus("GitHub token saved securely in Windows Credential Manager.", false); }
+        var value = _token.Text.Trim();
+        if (string.IsNullOrWhiteSpace(value)) { SetGlobalStatus("Enter a GitHub token before saving.", true); return; }
+        try { CredentialStore.Save(value); _storedToken = value; SetGlobalStatus("GitHub token saved securely on this computer.", false); }
         catch (Exception exception) { SetGlobalStatus(exception.Message, true); }
     }
 
