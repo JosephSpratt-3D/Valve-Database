@@ -72,6 +72,15 @@ public sealed class SyncService
             try { results.Add(await SyncAsync(kind, force, token)); }
             catch (Exception exception) { results.Add(new(kind, false, $"{Label(kind)} sync failed: {exception.Message}")); }
         }
+        if (results.Any(result => result.Uploaded))
+        {
+            var githubToken = CredentialStore.Read();
+            if (string.IsNullOrWhiteSpace(githubToken)) throw new InvalidOperationException("The databases uploaded, but the website deployment could not start because the saved token is missing.");
+            Status("Starting GitHub Pages deployment…");
+            using var github = new GitHubRepositoryClient(_config, githubToken);
+            await github.TriggerPagesDeploymentAsync(token);
+            Status("GitHub Pages deployment started. The website will update in a few minutes.");
+        }
         return results;
     }
 

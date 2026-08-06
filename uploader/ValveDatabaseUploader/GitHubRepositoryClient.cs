@@ -29,6 +29,13 @@ public sealed class GitHubRepositoryClient : IDisposable
         return root?["full_name"]?.GetValue<string>() ?? $"{_config.RepositoryOwner}/{_config.RepositoryName}";
     }
 
+    public async Task TriggerPagesDeploymentAsync(CancellationToken token)
+    {
+        var payload = new JsonObject { ["event_type"] = "database-sync", ["client_payload"] = new JsonObject { ["branch"] = _config.Branch } };
+        var response = await _http.PostAsJsonAsync($"repos/{_config.RepositoryOwner}/{_config.RepositoryName}/dispatches", payload, token);
+        await EnsureSuccess(response, "start the website deployment", token);
+    }
+
     public async Task<string> UploadDatabaseAndMetadataAsync(DatabaseKind kind, string snapshotPath, ValidationReport report, CancellationToken token)
     {
         var repositoryPath = kind == DatabaseKind.Hardware ? "client/public/data/active/hardware_configurator.db" : "client/public/data/active/manufacturing_log.db";

@@ -168,6 +168,12 @@ public sealed class MainForm : Form
                 if (force) MessageBox.Show(this, $"The upload did not complete.\n\n{details}\n\nThe same details were written to the uploader log.", "Synchronization failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        catch (Exception exception)
+        {
+            SetGlobalStatus(exception.Message, true);
+            AppLog.Write($"Website deployment failed: {exception.Message}");
+            if (force) MessageBox.Show(this, $"The database files were uploaded, but the website deployment did not start.\n\n{exception.Message}\n\nMake sure the fine-grained token has repository Contents read/write permission.", "Website deployment failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
         finally { SetBusy(false); }
     }
 
