@@ -3,6 +3,8 @@ dist/
 *.tsbuildinfo
 .env
 *.log
+**/bin/
+**/obj/
 server/data/app.db*
 server/data/active/*
 server/data/backups/*

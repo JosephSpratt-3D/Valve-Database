@@ -68,6 +68,10 @@ GITHUB_ACTIONS=true npm run build
 npm start
 ```
 
+## Windows database uploader
+
+The optional [CVS Controls Valve Database Uploader](uploader/README.md) safely validates and synchronizes both live SQLite databases from a Windows computer. GitHub Actions produces a portable, self-contained Windows executable.
+
 ## Project layout
 
 ```text
