@@ -18,7 +18,7 @@ The token is held in browser `localStorage` until the site's browser data is cle
 
 ## Deployment timing
 
-A database upload creates one commit for the database and another for source metadata. Loading both demo databases creates four commits. The workflow concurrency group cancels superseded builds, so the last commit produces the deployed state.
+A database upload creates one commit for the database and another for source metadata. The workflow concurrency group cancels superseded builds, so the last commit produces the deployed state.
 
 The uploader retains the current database in IndexedDB using the committed blob SHA. This makes the viewer immediately usable before the Pages build finishes.
 

@@ -7,7 +7,6 @@
     "dev": "npm run dev -w client",
     "build": "npm run build -w client",
     "test": "npm test -w server",
-    "demo": "node --import tsx server/src/scripts/create-demo.ts client/public/data/demo",
     "start": "npm run preview -w client"
   }
 }

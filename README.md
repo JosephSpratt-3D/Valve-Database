@@ -30,7 +30,7 @@ The repository URL displays this README by design. The application URL uses the 
 
 The committed settings file initially has no users. On the deployed `/login` screen:
 
-1. Enter the first administrator username and a password of at least 12 characters.
+1. Enter the first administrator username and a password of at least 4 characters.
 2. Enter a fine-grained GitHub personal access token.
 3. Submit the form. The application hashes the password and commits the administrator record to `client/public/data/settings.json`.
 
@@ -49,8 +49,6 @@ Sign in as an administrator and open **Databases**. Selecting a database perform
 - `client/public/data/active/manufacturing_log.db`
 
 The application supports `.db`, `.sqlite`, and `.sqlite3` files up to 50 MB. Because this is a public repository, uploaded databases and settings are publicly downloadable.
-
-Use **Load working demo** to commit both included fictional demo databases. The demo contains keyed and flat valves, multiple sizes/classes, manufacturing history, unit-bearing text, a valve with no history, and an intentional historical model mismatch linked by `valve_id`.
 
 GitHub Pages may take a minute or two to redeploy after a commit. The current browser uses its IndexedDB copy immediately.
 
@@ -78,7 +76,6 @@ client/src/local-backend.ts       Browser SQLite, login, and GitHub API layer
 client/src/main.tsx                Viewer and administration interface
 client/public/data/settings.json   Repository-local accounts and settings
 client/public/data/active/         Active public SQLite databases
-client/public/data/demo/           Fictional bundled databases
 server/                            Legacy local-server code and schema generator
 ```
 
@@ -92,4 +89,4 @@ server/                            Legacy local-server code and schema generator
 - Concurrent administrators can overwrite each other's settings changes.
 - HTTP-only sessions, server-side CSRF protection, private database storage, and secure password recovery are impossible on GitHub Pages alone.
 
-The former Express implementation remains in `server/` as a local/private deployment option and provides the exact demo schema generator, but it is not used by the GitHub Pages runtime.
+The former Express implementation remains in `server/` as a local/private deployment option, but it is not used by the GitHub Pages runtime.
