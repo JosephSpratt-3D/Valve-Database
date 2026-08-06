@@ -31,20 +31,22 @@ public static class DatabaseValidator
         var snapshot = Path.Combine(tempDirectory, $"{kind}-{Guid.NewGuid():N}.db");
         try
         {
-            await using var source = new SqliteConnection(new SqliteConnectionStringBuilder { DataSource = sourcePath, Mode = SqliteOpenMode.ReadOnly }.ToString());
-            await using var destination = new SqliteConnection(new SqliteConnectionStringBuilder { DataSource = snapshot, Mode = SqliteOpenMode.ReadWriteCreate }.ToString());
-            await source.OpenAsync(cancellationToken);
-            await destination.OpenAsync(cancellationToken);
-            source.BackupDatabase(destination);
-            await destination.CloseAsync();
-            return (snapshot, await ValidateAsync(snapshot, kind, cancellationToken));
+            await using (var source = OpenConnection(sourcePath, SqliteOpenMode.ReadOnly))
+            await using (var destination = OpenConnection(snapshot, SqliteOpenMode.ReadWriteCreate))
+            {
+                await source.OpenAsync(cancellationToken);
+                await destination.OpenAsync(cancellationToken);
+                source.BackupDatabase(destination);
+            }
+            var report = await ValidateAsync(snapshot, kind, cancellationToken);
+            return (snapshot, report);
         }
         catch { TryDelete(snapshot); throw; }
     }
 
     public static async Task<ValidationReport> ValidateAsync(string path, DatabaseKind kind, CancellationToken cancellationToken = default)
     {
-        await using var connection = new SqliteConnection(new SqliteConnectionStringBuilder { DataSource = path, Mode = SqliteOpenMode.ReadOnly }.ToString());
+        await using var connection = OpenConnection(path, SqliteOpenMode.ReadOnly);
         await connection.OpenAsync(cancellationToken);
         var integrity = Convert.ToString(await ScalarAsync(connection, "PRAGMA integrity_check", cancellationToken)) ?? "failed";
         if (integrity != "ok") throw new InvalidDataException($"SQLite integrity check failed: {integrity}");
@@ -69,5 +71,6 @@ public static class DatabaseValidator
     {
         await using var command = connection.CreateCommand(); command.CommandText = sql; return await command.ExecuteScalarAsync(token);
     }
+    private static SqliteConnection OpenConnection(string path, SqliteOpenMode mode) => new(new SqliteConnectionStringBuilder { DataSource = path, Mode = mode, Pooling = false }.ToString());
     public static void TryDelete(string path) { try { if (File.Exists(path)) File.Delete(path); } catch { } }
 }
