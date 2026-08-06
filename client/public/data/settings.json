@@ -521,26 +521,6 @@
   ],
   "databaseSources": [
     {
-      "source_type": "manufacturing_log",
-      "original_file_name": "manufacturing_log.db",
-      "file_size_bytes": 98304,
-      "uploaded_at": "2026-08-06 16:52:21",
-      "validation_status": "valid",
-      "sha": "c89b3599fbd8d737f0b9d3315201285a449f4bb7",
-      "validationReport": {
-        "valid": true,
-        "sourceType": "manufacturing_log",
-        "integrityCheck": "ok",
-        "rowCounts": {
-          "manufacturing_log": 233
-        },
-        "issues": [],
-        "details": {
-          "windowsUploaderValidation": true
-        }
-      }
-    },
-    {
       "source_type": "hardware_configurator",
       "original_file_name": "hardware_configurator.db",
       "file_size_bytes": 151552,
@@ -564,9 +544,37 @@
           "windowsUploaderValidation": true
         }
       }
+    },
+    {
+      "source_type": "manufacturing_log",
+      "original_file_name": "manufacturing_log.db",
+      "file_size_bytes": 98304,
+      "uploaded_at": "2026-08-06 16:53:23",
+      "validation_status": "valid",
+      "sha": "c89b3599fbd8d737f0b9d3315201285a449f4bb7",
+      "validationReport": {
+        "valid": true,
+        "sourceType": "manufacturing_log",
+        "integrityCheck": "ok",
+        "rowCounts": {
+          "manufacturing_log": 233
+        },
+        "issues": [],
+        "details": {
+          "windowsUploaderValidation": true
+        }
+      }
     }
   ],
   "auditLogs": [
+    {
+      "id": 1786056803822,
+      "username": "Windows Uploader",
+      "action": "database.sync",
+      "entity_type": "database_source",
+      "details": "{\u0022type\u0022:\u0022manufacturing_log\u0022,\u0022name\u0022:\u0022manufacturing_log.db\u0022}",
+      "created_at": "2026-08-06 16:53:23"
+    },
     {
       "id": 1786056801616,
       "username": "Windows Uploader",
@@ -824,7 +832,7 @@
       "created_at": "2026-08-05 18:11:10"
     }
   ],
-  "updatedAt": "2026-08-06T22:53:21.6160672\u002B00:00",
+  "updatedAt": "2026-08-06T22:53:23.8220772\u002B00:00",
   "referenceDisplays": {
     "actuators": [
       {
