@@ -117,7 +117,7 @@ public sealed class MainForm : Form
         _automatic.Text = "Enable automatic sync"; StyleCheck(_automatic); _automatic.CheckedChanged += (_, _) => { if (!_loading) SaveControls(); }; inner.Controls.Add(_automatic, 0, 1);
         AddNumericField(inner, "Check every (minutes)", _interval, 1); _interval.Minimum = 1; _interval.Maximum = 1440;
         AddNumericField(inner, "Stable for (seconds)", _stable, 2); _stable.Minimum = 10; _stable.Maximum = 3600;
-        _startup.Text = "Start with Windows"; StyleCheck(_startup); _startup.CheckedChanged += (_, _) => { if (!_loading) SaveControls(); }; inner.Controls.Add(_startup, 0, 2);
+        _startup.Text = "Open uploader when I sign in to Windows"; StyleCheck(_startup); _startup.CheckedChanged += (_, _) => { if (!_loading) SaveControls(); }; inner.Controls.Add(_startup, 0, 2); inner.SetColumnSpan(_startup, 2);
         var log = StyledButton("Open log", false); log.AutoSize = true; log.Margin = new Padding(0, 10, 0, 0); log.Click += (_, _) => { Directory.CreateDirectory(AppConfig.DataDirectory); if (!File.Exists(AppConfig.LogPath)) File.WriteAllText(AppConfig.LogPath, ""); Process.Start(new ProcessStartInfo(AppConfig.LogPath) { UseShellExecute = true }); }; inner.Controls.Add(log, 3, 2); card.Controls.Add(inner); return card;
     }
 
@@ -134,6 +134,11 @@ public sealed class MainForm : Form
         _hardwarePath.Text = _config.HardwareDatabasePath; _manufacturingPath.Text = _config.ManufacturingDatabasePath; _owner.Text = _config.RepositoryOwner; _repository.Text = _config.RepositoryName; _branch.Text = _config.Branch;
         _storedToken = CredentialStore.Read() ?? ""; _token.Text = _storedToken;
         _interval.Value = Math.Clamp(_config.CheckIntervalMinutes, 1, 1440); _stable.Value = Math.Clamp(_config.StableSeconds, 10, 3600); _automatic.Checked = _config.AutomaticSync; _startup.Checked = _config.StartWithWindows;
+        if (_config.StartWithWindows && !StartupManager.IsRegisteredForCurrentApp())
+        {
+            try { StartupManager.SetEnabled(true); }
+            catch (Exception exception) { SetGlobalStatus($"Could not update Windows startup: {exception.Message}", true); }
+        }
         _loading = false;
         UpdateLastStatuses();
     }
@@ -155,7 +160,13 @@ public sealed class MainForm : Form
             UpdateLastStatuses();
             foreach (var result in results) { StatusLabel(result.Kind).Text = result.Message; StatusLabel(result.Kind).ForeColor = result.Message.Contains("failed", StringComparison.OrdinalIgnoreCase) ? Color.FromArgb(255, 155, 144) : Muted; }
             var errors = results.Where(result => !result.Uploaded && result.Message.Contains("failed", StringComparison.OrdinalIgnoreCase)).ToArray();
-            SetGlobalStatus(errors.Length == 0 ? "Synchronization check complete." : "One or more databases could not be synchronized.", errors.Length > 0);
+            if (errors.Length == 0) SetGlobalStatus("Synchronization check complete.", false);
+            else
+            {
+                var details = string.Join(Environment.NewLine + Environment.NewLine, errors.Select(result => result.Message));
+                SetGlobalStatus(errors[0].Message, true);
+                if (force) MessageBox.Show(this, $"The upload did not complete.\n\n{details}\n\nThe same details were written to the uploader log.", "Synchronization failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
         finally { SetBusy(false); }
     }
