@@ -75,11 +75,19 @@ public sealed class SyncService
         if (results.Any(result => result.Uploaded))
         {
             var githubToken = CredentialStore.Read();
-            if (string.IsNullOrWhiteSpace(githubToken)) throw new InvalidOperationException("The databases uploaded, but the website deployment could not start because the saved token is missing.");
-            Status("Starting GitHub Pages deployment…");
-            using var github = new GitHubRepositoryClient(_config, githubToken);
-            await github.TriggerPagesDeploymentAsync(token);
-            Status("GitHub Pages deployment started. The website will update in a few minutes.");
+            try
+            {
+                if (string.IsNullOrWhiteSpace(githubToken)) throw new InvalidOperationException("The saved token is missing.");
+                Status("Starting GitHub Pages deployment…");
+                using var github = new GitHubRepositoryClient(_config, githubToken);
+                await github.TriggerPagesDeploymentAsync(token);
+                Status("GitHub Pages deployment started. The website will update in a few minutes.");
+            }
+            catch (Exception exception) when (exception is not OperationCanceledException)
+            {
+                AppLog.Write($"Immediate Pages deployment was unavailable: {exception.Message}");
+                Status("Databases uploaded. GitHub Pages will deploy them on its five-minute schedule.");
+            }
         }
         return results;
     }

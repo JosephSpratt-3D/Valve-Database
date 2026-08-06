@@ -5,6 +5,8 @@ on:
     branches: [main]
   repository_dispatch:
     types: [database-sync]
+  schedule:
+    - cron: "*/5 * * * *"
   workflow_dispatch:
 
 permissions:
