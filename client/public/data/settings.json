@@ -14,7 +14,7 @@
       "id": 2,
       "username": "user",
       "role": "user",
-      "password_hash": "$2b$10$esc6x3fTCVEfvop.6zCxjOYxBtbT4yrf3Zj1N/iYCBVKpokBUPaHW",
+      "password_hash": "$2b$10$8ndd2Qfw14uuxJH8pGXDWOC.XuAxkFEgZSl9/EgfbH/5/M2WcW9cO",
       "is_active": 1,
       "created_at": "2026-08-05 18:18:15"
     }
@@ -568,6 +568,14 @@
   ],
   "auditLogs": [
     {
+      "id": 1785982678889,
+      "username": "admin",
+      "action": "user.password_reset",
+      "entity_type": "user",
+      "details": "{\"id\":2}",
+      "created_at": "2026-08-06 02:17:58"
+    },
+    {
       "id": 1785982601784,
       "username": "admin",
       "action": "user.password_reset",
@@ -712,7 +720,7 @@
       "created_at": "2026-08-05 18:11:10"
     }
   ],
-  "updatedAt": "2026-08-06T02:16:41.784Z",
+  "updatedAt": "2026-08-06T02:17:58.889Z",
   "referenceDisplays": {
     "actuators": [
       {
