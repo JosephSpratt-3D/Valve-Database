@@ -12,7 +12,8 @@ public sealed class AppConfig
     public int CheckIntervalMinutes { get; set; } = 5;
     public int StableSeconds { get; set; } = 60;
     public bool AutomaticSync { get; set; }
-    public bool StartWithWindows { get; set; }
+    public bool StartWithWindows { get; set; } = true;
+    public bool StartupPreferenceSet { get; set; }
     public string? LastHardwareHash { get; set; }
     public string? LastManufacturingHash { get; set; }
     public DateTimeOffset? LastHardwareUpload { get; set; }

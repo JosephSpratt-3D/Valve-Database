@@ -10,7 +10,7 @@ public sealed class MainForm : Form
     private readonly TextBox _hardwarePath = new(), _manufacturingPath = new(), _owner = new(), _repository = new(), _branch = new(), _token = new();
     private readonly NumericUpDown _interval = new(), _stable = new();
     private readonly CheckBox _automatic = new(), _startup = new(), _showToken = new();
-    private readonly Label _hardwareStatus = new(), _manufacturingStatus = new(), _globalStatus = new();
+    private readonly Label _hardwareStatus = new(), _manufacturingStatus = new(), _globalStatus = new(), _startupStatus = new();
     private readonly Button _syncAllButton;
     private readonly System.Windows.Forms.Timer _timer = new();
     private readonly NotifyIcon _tray;
@@ -111,14 +111,16 @@ public sealed class MainForm : Form
 
     private Control AutomationCard()
     {
-        var card = Card(154); var inner = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 4, RowCount = 3 };
+        var card = Card(184); var inner = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 4, RowCount = 4 };
         inner.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 42)); inner.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 24)); inner.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 24)); inner.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10));
         var heading = new Label { Text = "Automatic synchronization", AutoSize = true, Font = new Font("Segoe UI", 12, FontStyle.Bold) }; inner.Controls.Add(heading, 0, 0); inner.SetColumnSpan(heading, 4);
         _automatic.Text = "Enable automatic sync"; StyleCheck(_automatic); _automatic.CheckedChanged += (_, _) => { if (!_loading) SaveControls(); }; inner.Controls.Add(_automatic, 0, 1);
         AddNumericField(inner, "Check every (minutes)", _interval, 1); _interval.Minimum = 1; _interval.Maximum = 1440;
         AddNumericField(inner, "Stable for (seconds)", _stable, 2); _stable.Minimum = 10; _stable.Maximum = 3600;
         _startup.Text = "Open uploader when I sign in to Windows"; StyleCheck(_startup); _startup.CheckedChanged += (_, _) => { if (!_loading) SaveControls(); }; inner.Controls.Add(_startup, 0, 2); inner.SetColumnSpan(_startup, 2);
-        var log = StyledButton("Open log", false); log.AutoSize = true; log.Margin = new Padding(0, 10, 0, 0); log.Click += (_, _) => { Directory.CreateDirectory(AppConfig.DataDirectory); if (!File.Exists(AppConfig.LogPath)) File.WriteAllText(AppConfig.LogPath, ""); Process.Start(new ProcessStartInfo(AppConfig.LogPath) { UseShellExecute = true }); }; inner.Controls.Add(log, 3, 2); card.Controls.Add(inner); return card;
+        var log = StyledButton("Open log", false); log.AutoSize = true; log.Margin = new Padding(0, 10, 0, 0); log.Click += (_, _) => { Directory.CreateDirectory(AppConfig.DataDirectory); if (!File.Exists(AppConfig.LogPath)) File.WriteAllText(AppConfig.LogPath, ""); Process.Start(new ProcessStartInfo(AppConfig.LogPath) { UseShellExecute = true }); }; inner.Controls.Add(log, 3, 2);
+        _startupStatus.AutoSize = true; _startupStatus.ForeColor = Muted; _startupStatus.Margin = new Padding(0, 8, 0, 0); inner.Controls.Add(_startupStatus, 0, 3); inner.SetColumnSpan(_startupStatus, 4);
+        card.Controls.Add(inner); return card;
     }
 
     private Panel Card(int height) => new() { Dock = DockStyle.Fill, Height = height, BackColor = PanelColor, Padding = new Padding(22), Margin = new Padding(0, 0, 0, 16) };
@@ -131,15 +133,19 @@ public sealed class MainForm : Form
     private void LoadConfigIntoControls()
     {
         _loading = true;
+        if (!_config.StartupPreferenceSet) { _config.StartWithWindows = true; _config.StartupPreferenceSet = true; }
         _hardwarePath.Text = _config.HardwareDatabasePath; _manufacturingPath.Text = _config.ManufacturingDatabasePath; _owner.Text = _config.RepositoryOwner; _repository.Text = _config.RepositoryName; _branch.Text = _config.Branch;
         _storedToken = CredentialStore.Read() ?? ""; _token.Text = _storedToken;
-        _interval.Value = Math.Clamp(_config.CheckIntervalMinutes, 1, 1440); _stable.Value = Math.Clamp(_config.StableSeconds, 10, 3600); _automatic.Checked = _config.AutomaticSync; _startup.Checked = _config.StartWithWindows;
-        if (_config.StartWithWindows && !StartupManager.IsRegisteredForCurrentApp())
+        _interval.Value = Math.Clamp(_config.CheckIntervalMinutes, 1, 1440); _stable.Value = Math.Clamp(_config.StableSeconds, 10, 3600); _automatic.Checked = _config.AutomaticSync;
+        var startupWasRegistered = StartupManager.IsRegisteredForCurrentApp();
+        _startup.Checked = _config.StartWithWindows || startupWasRegistered;
+        if (_startup.Checked)
         {
-            try { StartupManager.SetEnabled(true); }
+            try { StartupManager.SetEnabled(true); _config.StartWithWindows = true; _config.Save(); }
             catch (Exception exception) { SetGlobalStatus($"Could not update Windows startup: {exception.Message}", true); }
         }
         _loading = false;
+        UpdateStartupStatus();
         UpdateLastStatuses();
     }
 
@@ -147,8 +153,9 @@ public sealed class MainForm : Form
     {
         _config.HardwareDatabasePath = _hardwarePath.Text.Trim(); _config.ManufacturingDatabasePath = _manufacturingPath.Text.Trim(); _config.RepositoryOwner = _owner.Text.Trim(); _config.RepositoryName = _repository.Text.Trim(); _config.Branch = _branch.Text.Trim();
         _config.CheckIntervalMinutes = (int)_interval.Value; _config.StableSeconds = (int)_stable.Value; _config.AutomaticSync = _automatic.Checked;
-        try { if (_config.StartWithWindows != _startup.Checked) StartupManager.SetEnabled(_startup.Checked); _config.StartWithWindows = _startup.Checked; } catch (Exception exception) { MessageBox.Show(this, exception.Message, "Startup setting", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+        try { StartupManager.SetEnabled(_startup.Checked); _config.StartWithWindows = _startup.Checked; _config.StartupPreferenceSet = true; } catch (Exception exception) { MessageBox.Show(this, exception.Message, "Startup setting", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
         _config.Save(); RestartTimer();
+        UpdateStartupStatus();
     }
 
     private async Task RunSyncAllAsync(bool force)
@@ -214,6 +221,13 @@ public sealed class MainForm : Form
     {
         if (_config.LastHardwareUpload is not null) { _hardwareStatus.Text = $"Last uploaded {_config.LastHardwareUpload:MMM d, yyyy · h:mm tt}"; _hardwareStatus.ForeColor = Color.FromArgb(113, 215, 222); }
         if (_config.LastManufacturingUpload is not null) { _manufacturingStatus.Text = $"Last uploaded {_config.LastManufacturingUpload:MMM d, yyyy · h:mm tt}"; _manufacturingStatus.ForeColor = Color.FromArgb(113, 215, 222); }
+    }
+
+    private void UpdateStartupStatus()
+    {
+        var registered = StartupManager.IsRegisteredForCurrentApp();
+        _startupStatus.Text = registered ? "✓ Registered with Windows Startup · opens minimized in the notification area" : "Not registered with Windows Startup";
+        _startupStatus.ForeColor = registered ? Color.FromArgb(113, 215, 222) : Muted;
     }
 
     private void SetBusy(bool value) { _busy = value; _syncAllButton.Enabled = !value; UseWaitCursor = value; }

@@ -9,8 +9,10 @@ public static class StartupManager
 
     public static void SetEnabled(bool enabled)
     {
-        using var key = Registry.CurrentUser.OpenSubKey(RegistryPath, true) ?? throw new InvalidOperationException("Windows startup settings are unavailable.");
+        using var key = Registry.CurrentUser.CreateSubKey(RegistryPath, true) ?? throw new InvalidOperationException("Windows startup settings are unavailable.");
         if (enabled) key.SetValue(KeyName, StartupCommand); else key.DeleteValue(KeyName, false);
+        key.Flush();
+        if (enabled && !IsRegisteredForCurrentApp()) throw new InvalidOperationException("Windows did not save the automatic startup registration.");
     }
 
     public static bool IsRegisteredForCurrentApp()
@@ -19,5 +21,14 @@ public static class StartupManager
         return string.Equals(key?.GetValue(KeyName) as string, StartupCommand, StringComparison.OrdinalIgnoreCase);
     }
 
-    private static string StartupCommand => $"\"{Environment.ProcessPath}\" --minimized";
+    public static string RegisteredCommand
+    {
+        get
+        {
+            using var key = Registry.CurrentUser.OpenSubKey(RegistryPath, false);
+            return key?.GetValue(KeyName) as string ?? "";
+        }
+    }
+
+    private static string StartupCommand => $"\"{Application.ExecutablePath}\" --minimized";
 }

@@ -21,7 +21,7 @@ The executable is self-contained. Git, Python, Visual Studio, and the .NET runti
 5. Select **Set token**, paste the token, and save it.
 6. Select **Test connection**.
 7. Select **Sync both now** for the first upload.
-8. Enable **Automatic sync** and, if desired, **Start with Windows**.
+8. Leave **Open uploader when I sign in to Windows** enabled and turn on **Automatic sync**.
 
 The token is stored in Windows Credential Manager under `CVSControls.ValveDatabaseUploader.GitHubToken`. It is never written to `config.json` or the repository.
 
@@ -41,3 +41,5 @@ Configuration and logs are stored under `%LOCALAPPDATA%\CVS Controls\Valve Datab
 - Keeps the source databases read-only and removes temporary snapshots.
 
 Closing the window minimizes the uploader to the notification area while automatic synchronization is enabled. Use the tray icon's **Exit** command to stop it completely.
+
+Automatic startup is enabled by default for new installations. The app registers the current executable under the signed-in user's Windows Startup settings, verifies the registration, repairs it after the executable is moved or replaced, and starts minimized in the notification area after Windows sign-in. The Automation card shows the live registration status.
