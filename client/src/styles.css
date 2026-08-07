@@ -19,3 +19,5 @@ html[data-theme="dark"] .login-art{background:radial-gradient(ellipse at 50% 66%
 html[data-theme="dark"] .login-art{background:radial-gradient(ellipse at 48% 64%,#18b3bf45 0%,#0b8f9930 30%,transparent 64%),radial-gradient(circle at 16% 12%,#4fc4cc24 0%,transparent 40%),linear-gradient(145deg,#17484d 0%,#12373b 42%,#20272a 76%,#18191b 100%)}
 .stem-badge.flats,.stem-value.flats{color:#9a461e;background:#ffeadc;border-color:#f3c5a9}
 @media(max-width:760px){input,select,textarea{font-size:16px}}
+.summary-grid div.highlight{background:#fff8e8;border-left:3px solid #e87d3e}
+html[data-theme="dark"] .summary-grid div.highlight{background:#3b3420}
