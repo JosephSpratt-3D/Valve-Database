@@ -652,6 +652,14 @@
   ],
   "auditLogs": [
     {
+      "id": 1786113191830,
+      "username": "admin",
+      "action": "display.configuration.update",
+      "entity_type": "display_configuration",
+      "details": "{\"sections\":4,\"fields\":46}",
+      "created_at": "2026-08-07 14:33:11"
+    },
+    {
       "id": 1786113127944,
       "username": "admin",
       "action": "display.configuration.update",
@@ -948,7 +956,7 @@
       "created_at": "2026-08-05 18:11:10"
     }
   ],
-  "updatedAt": "2026-08-07T14:32:07.944Z",
+  "updatedAt": "2026-08-07T14:33:11.830Z",
   "referenceDisplays": {
     "actuators": [
       {
