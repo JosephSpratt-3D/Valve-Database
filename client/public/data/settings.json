@@ -628,9 +628,9 @@
       "source_type": "hardware_configurator",
       "original_file_name": "hardware_configurator.db",
       "file_size_bytes": 151552,
-      "uploaded_at": "2026-08-11 14:41:50",
+      "uploaded_at": "2026-08-11 14:43:51",
       "validation_status": "valid",
-      "sha": "e008e877f3d55d3107164ceca48b17048939ac0a",
+      "sha": "480e91b6d421bc5d0a0f31fcd9a15ce25f216fba",
       "validationReport": {
         "valid": true,
         "sourceType": "hardware_configurator",
@@ -651,6 +651,14 @@
     }
   ],
   "auditLogs": [
+    {
+      "id": 1786481031080,
+      "username": "Windows Uploader",
+      "action": "database.sync",
+      "entity_type": "database_source",
+      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "created_at": "2026-08-11 14:43:51"
+    },
     {
       "id": 1786480910984,
       "username": "Windows Uploader",
@@ -1284,7 +1292,7 @@
       "created_at": "2026-08-05 18:11:10"
     }
   ],
-  "updatedAt": "2026-08-11T20:41:50.9843080\u002B00:00",
+  "updatedAt": "2026-08-11T20:43:51.0801569\u002B00:00",
   "referenceDisplays": {
     "actuators": [
       {
