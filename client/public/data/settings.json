@@ -652,6 +652,14 @@
   ],
   "auditLogs": [
     {
+      "id": 1786550201746,
+      "username": "admin",
+      "action": "configurator.tolerances.update",
+      "entity_type": "configurator_settings",
+      "details": "{\"mountingTolerance\":0.06,\"packingGridTolerance\":0.08,\"angleTolerance\":0.51,\"squareTolerance\":0.01}",
+      "created_at": "2026-08-12 15:56:41"
+    },
+    {
       "id": 1786550166964,
       "username": "admin",
       "action": "configurator.tolerances.update",
@@ -1484,7 +1492,7 @@
       "created_at": "2026-08-05 18:11:10"
     }
   ],
-  "updatedAt": "2026-08-12T15:56:06.964Z",
+  "updatedAt": "2026-08-12T15:56:41.746Z",
   "referenceDisplays": {
     "actuators": [
       {
@@ -2002,7 +2010,7 @@
     ]
   },
   "configuratorSettings": {
-    "mountingTolerance": 0.025,
+    "mountingTolerance": 0.06,
     "packingGridTolerance": 0.08,
     "angleTolerance": 0.51,
     "squareTolerance": 0.01
