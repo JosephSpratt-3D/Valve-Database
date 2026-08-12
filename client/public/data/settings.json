@@ -8,7 +8,7 @@
       "password_hash": "$2b$10$7diFhGlp7.LcMUcKrkEha.pbIZhr.iTkMB6lEMt9wz0Fn6qeiMjfO",
       "is_active": 1,
       "created_at": "2026-08-05 18:11:10",
-      "last_login_at": "2026-08-12 14:59:24"
+      "last_login_at": "2026-08-12 15:55:58"
     },
     {
       "id": 2,
@@ -44,7 +44,7 @@
     {
       "id": 4,
       "section_key": "manufacturing",
-      "label": "Configurator \u0026 Drawing Summary",
+      "label": "Configurator & Drawing Summary",
       "sort_order": 40,
       "is_visible": 1
     }
@@ -652,11 +652,19 @@
   ],
   "auditLogs": [
     {
+      "id": 1786550166964,
+      "username": "admin",
+      "action": "configurator.tolerances.update",
+      "entity_type": "configurator_settings",
+      "details": "{\"mountingTolerance\":0.025,\"packingGridTolerance\":0.08,\"angleTolerance\":0.51,\"squareTolerance\":0.01}",
+      "created_at": "2026-08-12 15:56:06"
+    },
+    {
       "id": 1786549013481,
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-12 09:36:53"
     },
     {
@@ -664,7 +672,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-12 09:28:54"
     },
     {
@@ -672,7 +680,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022manufacturing_log\u0022,\u0022name\u0022:\u0022manufacturing_log.db\u0022}",
+      "details": "{\"type\":\"manufacturing_log\",\"name\":\"manufacturing_log.db\"}",
       "created_at": "2026-08-12 09:14:53"
     },
     {
@@ -680,7 +688,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-12 09:10:53"
     },
     {
@@ -688,7 +696,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-12 09:04:53"
     },
     {
@@ -696,7 +704,7 @@
       "username": "admin",
       "action": "configurator.tolerances.update",
       "entity_type": "configurator_settings",
-      "details": "{\u0022mountingTolerance\u0022:0.06,\u0022packingGridTolerance\u0022:0.08,\u0022angleTolerance\u0022:0.51,\u0022squareTolerance\u0022:0.01}",
+      "details": "{\"mountingTolerance\":0.06,\"packingGridTolerance\":0.08,\"angleTolerance\":0.51,\"squareTolerance\":0.01}",
       "created_at": "2026-08-12 14:59:30"
     },
     {
@@ -704,7 +712,7 @@
       "username": "admin",
       "action": "configurator.tolerances.update",
       "entity_type": "configurator_settings",
-      "details": "{\u0022mountingTolerance\u0022:0.05,\u0022packingGridTolerance\u0022:0.08,\u0022angleTolerance\u0022:0.51,\u0022squareTolerance\u0022:0.01}",
+      "details": "{\"mountingTolerance\":0.05,\"packingGridTolerance\":0.08,\"angleTolerance\":0.51,\"squareTolerance\":0.01}",
       "created_at": "2026-08-12 00:37:44"
     },
     {
@@ -712,7 +720,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022manufacturing_log\u0022,\u0022name\u0022:\u0022manufacturing_log.db\u0022}",
+      "details": "{\"type\":\"manufacturing_log\",\"name\":\"manufacturing_log.db\"}",
       "created_at": "2026-08-11 17:00:49"
     },
     {
@@ -720,7 +728,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-11 17:00:46"
     },
     {
@@ -728,7 +736,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-11 16:49:32"
     },
     {
@@ -736,7 +744,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-11 16:47:32"
     },
     {
@@ -744,7 +752,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022manufacturing_log\u0022,\u0022name\u0022:\u0022manufacturing_log.db\u0022}",
+      "details": "{\"type\":\"manufacturing_log\",\"name\":\"manufacturing_log.db\"}",
       "created_at": "2026-08-11 16:43:14"
     },
     {
@@ -752,7 +760,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-11 16:43:11"
     },
     {
@@ -760,7 +768,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-11 16:21:51"
     },
     {
@@ -768,7 +776,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-11 15:55:51"
     },
     {
@@ -776,7 +784,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-11 15:35:51"
     },
     {
@@ -784,7 +792,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-11 15:25:51"
     },
     {
@@ -792,7 +800,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-11 15:21:51"
     },
     {
@@ -800,7 +808,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-11 15:03:51"
     },
     {
@@ -808,7 +816,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-11 14:57:51"
     },
     {
@@ -816,7 +824,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-11 14:53:51"
     },
     {
@@ -824,7 +832,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-11 14:51:51"
     },
     {
@@ -832,7 +840,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-11 14:47:51"
     },
     {
@@ -840,7 +848,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-11 14:43:51"
     },
     {
@@ -848,7 +856,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-11 14:41:50"
     },
     {
@@ -856,7 +864,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-11 14:39:51"
     },
     {
@@ -864,7 +872,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-11 14:29:51"
     },
     {
@@ -872,7 +880,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022manufacturing_log\u0022,\u0022name\u0022:\u0022manufacturing_log.db\u0022}",
+      "details": "{\"type\":\"manufacturing_log\",\"name\":\"manufacturing_log.db\"}",
       "created_at": "2026-08-11 11:35:50"
     },
     {
@@ -880,7 +888,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-11 11:31:50"
     },
     {
@@ -888,7 +896,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022manufacturing_log\u0022,\u0022name\u0022:\u0022manufacturing_log.db\u0022}",
+      "details": "{\"type\":\"manufacturing_log\",\"name\":\"manufacturing_log.db\"}",
       "created_at": "2026-08-11 11:27:50"
     },
     {
@@ -896,7 +904,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-11 11:25:50"
     },
     {
@@ -904,7 +912,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-11 11:23:50"
     },
     {
@@ -912,7 +920,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022manufacturing_log\u0022,\u0022name\u0022:\u0022manufacturing_log.db\u0022}",
+      "details": "{\"type\":\"manufacturing_log\",\"name\":\"manufacturing_log.db\"}",
       "created_at": "2026-08-11 11:21:50"
     },
     {
@@ -920,7 +928,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-11 11:17:50"
     },
     {
@@ -928,7 +936,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022manufacturing_log\u0022,\u0022name\u0022:\u0022manufacturing_log.db\u0022}",
+      "details": "{\"type\":\"manufacturing_log\",\"name\":\"manufacturing_log.db\"}",
       "created_at": "2026-08-11 09:51:49"
     },
     {
@@ -936,7 +944,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-11 09:45:50"
     },
     {
@@ -944,7 +952,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022manufacturing_log\u0022,\u0022name\u0022:\u0022manufacturing_log.db\u0022}",
+      "details": "{\"type\":\"manufacturing_log\",\"name\":\"manufacturing_log.db\"}",
       "created_at": "2026-08-10 14:52:35"
     },
     {
@@ -952,7 +960,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-10 14:46:36"
     },
     {
@@ -960,7 +968,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-10 14:42:35"
     },
     {
@@ -968,7 +976,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022manufacturing_log\u0022,\u0022name\u0022:\u0022manufacturing_log.db\u0022}",
+      "details": "{\"type\":\"manufacturing_log\",\"name\":\"manufacturing_log.db\"}",
       "created_at": "2026-08-10 14:40:37"
     },
     {
@@ -976,7 +984,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-10 14:38:35"
     },
     {
@@ -984,7 +992,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022manufacturing_log\u0022,\u0022name\u0022:\u0022manufacturing_log.db\u0022}",
+      "details": "{\"type\":\"manufacturing_log\",\"name\":\"manufacturing_log.db\"}",
       "created_at": "2026-08-10 14:34:41"
     },
     {
@@ -992,7 +1000,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-10 14:34:36"
     },
     {
@@ -1000,7 +1008,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-10 14:28:43"
     },
     {
@@ -1008,7 +1016,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022manufacturing_log\u0022,\u0022name\u0022:\u0022manufacturing_log.db\u0022}",
+      "details": "{\"type\":\"manufacturing_log\",\"name\":\"manufacturing_log.db\"}",
       "created_at": "2026-08-10 14:24:41"
     },
     {
@@ -1016,7 +1024,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-10 14:24:37"
     },
     {
@@ -1024,7 +1032,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-10 14:22:38"
     },
     {
@@ -1032,7 +1040,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022manufacturing_log\u0022,\u0022name\u0022:\u0022manufacturing_log.db\u0022}",
+      "details": "{\"type\":\"manufacturing_log\",\"name\":\"manufacturing_log.db\"}",
       "created_at": "2026-08-10 14:18:40"
     },
     {
@@ -1040,7 +1048,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-10 14:18:36"
     },
     {
@@ -1048,7 +1056,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-10 14:12:38"
     },
     {
@@ -1056,7 +1064,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022manufacturing_log\u0022,\u0022name\u0022:\u0022manufacturing_log.db\u0022}",
+      "details": "{\"type\":\"manufacturing_log\",\"name\":\"manufacturing_log.db\"}",
       "created_at": "2026-08-10 13:14:41"
     },
     {
@@ -1064,7 +1072,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-10 13:10:38"
     },
     {
@@ -1072,7 +1080,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-10 13:06:35"
     },
     {
@@ -1080,7 +1088,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-10 11:16:43"
     },
     {
@@ -1088,7 +1096,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022manufacturing_log\u0022,\u0022name\u0022:\u0022manufacturing_log.db\u0022}",
+      "details": "{\"type\":\"manufacturing_log\",\"name\":\"manufacturing_log.db\"}",
       "created_at": "2026-08-10 11:14:42"
     },
     {
@@ -1096,7 +1104,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-10 11:10:41"
     },
     {
@@ -1104,7 +1112,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-10 11:00:45"
     },
     {
@@ -1112,7 +1120,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022manufacturing_log\u0022,\u0022name\u0022:\u0022manufacturing_log.db\u0022}",
+      "details": "{\"type\":\"manufacturing_log\",\"name\":\"manufacturing_log.db\"}",
       "created_at": "2026-08-10 10:56:44"
     },
     {
@@ -1120,7 +1128,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-10 10:54:42"
     },
     {
@@ -1128,7 +1136,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022manufacturing_log\u0022,\u0022name\u0022:\u0022manufacturing_log.db\u0022}",
+      "details": "{\"type\":\"manufacturing_log\",\"name\":\"manufacturing_log.db\"}",
       "created_at": "2026-08-10 10:52:40"
     },
     {
@@ -1136,7 +1144,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-10 10:44:43"
     },
     {
@@ -1144,7 +1152,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-10 10:42:40"
     },
     {
@@ -1152,7 +1160,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022manufacturing_log\u0022,\u0022name\u0022:\u0022manufacturing_log.db\u0022}",
+      "details": "{\"type\":\"manufacturing_log\",\"name\":\"manufacturing_log.db\"}",
       "created_at": "2026-08-10 10:18:43"
     },
     {
@@ -1160,7 +1168,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-10 09:56:43"
     },
     {
@@ -1168,7 +1176,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-07 11:42:32"
     },
     {
@@ -1176,7 +1184,7 @@
       "username": "admin",
       "action": "display.configuration.update",
       "entity_type": "display_configuration",
-      "details": "{\u0022sections\u0022:4,\u0022fields\u0022:46}",
+      "details": "{\"sections\":4,\"fields\":46}",
       "created_at": "2026-08-07 14:33:11"
     },
     {
@@ -1184,7 +1192,7 @@
       "username": "admin",
       "action": "display.configuration.update",
       "entity_type": "display_configuration",
-      "details": "{\u0022sections\u0022:4,\u0022fields\u0022:46}",
+      "details": "{\"sections\":4,\"fields\":46}",
       "created_at": "2026-08-07 14:32:07"
     },
     {
@@ -1192,7 +1200,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-06 16:58:15"
     },
     {
@@ -1200,7 +1208,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022manufacturing_log\u0022,\u0022name\u0022:\u0022manufacturing_log.db\u0022}",
+      "details": "{\"type\":\"manufacturing_log\",\"name\":\"manufacturing_log.db\"}",
       "created_at": "2026-08-06 16:56:18"
     },
     {
@@ -1208,7 +1216,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-06 16:56:15"
     },
     {
@@ -1216,7 +1224,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022manufacturing_log\u0022,\u0022name\u0022:\u0022manufacturing_log.db\u0022}",
+      "details": "{\"type\":\"manufacturing_log\",\"name\":\"manufacturing_log.db\"}",
       "created_at": "2026-08-06 16:53:23"
     },
     {
@@ -1224,7 +1232,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-06 16:53:21"
     },
     {
@@ -1232,7 +1240,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022manufacturing_log\u0022,\u0022name\u0022:\u0022manufacturing_log.db\u0022}",
+      "details": "{\"type\":\"manufacturing_log\",\"name\":\"manufacturing_log.db\"}",
       "created_at": "2026-08-06 16:52:21"
     },
     {
@@ -1240,7 +1248,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-06 16:52:19"
     },
     {
@@ -1248,7 +1256,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022manufacturing_log\u0022,\u0022name\u0022:\u0022manufacturing_log.db\u0022}",
+      "details": "{\"type\":\"manufacturing_log\",\"name\":\"manufacturing_log.db\"}",
       "created_at": "2026-08-06 16:49:18"
     },
     {
@@ -1256,7 +1264,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-06 16:49:16"
     },
     {
@@ -1264,7 +1272,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022manufacturing_log\u0022,\u0022name\u0022:\u0022manufacturing_log.db\u0022}",
+      "details": "{\"type\":\"manufacturing_log\",\"name\":\"manufacturing_log.db\"}",
       "created_at": "2026-08-06 16:21:57"
     },
     {
@@ -1272,7 +1280,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-06 16:21:55"
     },
     {
@@ -1280,7 +1288,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-06 16:16:55"
     },
     {
@@ -1288,7 +1296,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022manufacturing_log\u0022,\u0022name\u0022:\u0022manufacturing_log.db\u0022}",
+      "details": "{\"type\":\"manufacturing_log\",\"name\":\"manufacturing_log.db\"}",
       "created_at": "2026-08-06 14:51:43"
     },
     {
@@ -1296,7 +1304,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-06 14:51:40"
     },
     {
@@ -1304,7 +1312,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022manufacturing_log\u0022,\u0022name\u0022:\u0022manufacturing_log.db\u0022}",
+      "details": "{\"type\":\"manufacturing_log\",\"name\":\"manufacturing_log.db\"}",
       "created_at": "2026-08-06 14:50:51"
     },
     {
@@ -1312,7 +1320,7 @@
       "username": "Windows Uploader",
       "action": "database.sync",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-06 14:50:48"
     },
     {
@@ -1320,7 +1328,7 @@
       "username": "admin",
       "action": "display.configuration.update",
       "entity_type": "display_configuration",
-      "details": "{\u0022sections\u0022:4,\u0022fields\u0022:39}",
+      "details": "{\"sections\":4,\"fields\":39}",
       "created_at": "2026-08-06 02:19:21"
     },
     {
@@ -1328,7 +1336,7 @@
       "username": "admin",
       "action": "user.password_reset",
       "entity_type": "user",
-      "details": "{\u0022id\u0022:2}",
+      "details": "{\"id\":2}",
       "created_at": "2026-08-06 02:17:58"
     },
     {
@@ -1336,7 +1344,7 @@
       "username": "admin",
       "action": "user.password_reset",
       "entity_type": "user",
-      "details": "{\u0022id\u0022:1}",
+      "details": "{\"id\":1}",
       "created_at": "2026-08-06 02:16:41"
     },
     {
@@ -1344,7 +1352,7 @@
       "username": "admin",
       "action": "display.configuration.update",
       "entity_type": "display_configuration",
-      "details": "{\u0022sections\u0022:4,\u0022fields\u0022:39}",
+      "details": "{\"sections\":4,\"fields\":39}",
       "created_at": "2026-08-05 19:39:57"
     },
     {
@@ -1352,7 +1360,7 @@
       "username": "admin",
       "action": "display.configuration.update",
       "entity_type": "display_configuration",
-      "details": "{\u0022sections\u0022:4,\u0022fields\u0022:39}",
+      "details": "{\"sections\":4,\"fields\":39}",
       "created_at": "2026-08-05 19:36:53"
     },
     {
@@ -1360,7 +1368,7 @@
       "username": "admin",
       "action": "display.configuration.update",
       "entity_type": "display_configuration",
-      "details": "{\u0022sections\u0022:4,\u0022fields\u0022:39}",
+      "details": "{\"sections\":4,\"fields\":39}",
       "created_at": "2026-08-05 19:35:19"
     },
     {
@@ -1368,7 +1376,7 @@
       "username": "admin",
       "action": "display.configuration.update",
       "entity_type": "display_configuration",
-      "details": "{\u0022sections\u0022:4,\u0022fields\u0022:39}",
+      "details": "{\"sections\":4,\"fields\":39}",
       "created_at": "2026-08-05 19:34:55"
     },
     {
@@ -1376,7 +1384,7 @@
       "username": "admin",
       "action": "display.configuration.update",
       "entity_type": "display_configuration",
-      "details": "{\u0022sections\u0022:4,\u0022fields\u0022:39}",
+      "details": "{\"sections\":4,\"fields\":39}",
       "created_at": "2026-08-05 19:34:00"
     },
     {
@@ -1384,7 +1392,7 @@
       "username": "admin",
       "action": "display.configuration.update",
       "entity_type": "display_configuration",
-      "details": "{\u0022sections\u0022:4,\u0022fields\u0022:39}",
+      "details": "{\"sections\":4,\"fields\":39}",
       "created_at": "2026-08-05 19:24:48"
     },
     {
@@ -1392,7 +1400,7 @@
       "username": "admin",
       "action": "display.field.update",
       "entity_type": "display_field",
-      "details": "{\u0022id\u0022:17,\u0022field_key\u0022:\u0022keyed.valve_start_angle\u0022,\u0022section_key\u0022:\u0022keyed\u0022,\u0022label\u0022:\u0022Valve Hole Start Angle\u0022,\u0022sort_order\u0022:170,\u0022is_visible\u0022:true,\u0022is_highlighted\u0022:false,\u0022unit\u0022:null,\u0022decimal_places\u0022:0,\u0022help_text\u0022:null}",
+      "details": "{\"id\":17,\"field_key\":\"keyed.valve_start_angle\",\"section_key\":\"keyed\",\"label\":\"Valve Hole Start Angle\",\"sort_order\":170,\"is_visible\":true,\"is_highlighted\":false,\"unit\":null,\"decimal_places\":0,\"help_text\":null}",
       "created_at": "2026-08-05 18:43:05"
     },
     {
@@ -1400,7 +1408,7 @@
       "username": "admin",
       "action": "display.field.update",
       "entity_type": "display_field",
-      "details": "{\u0022id\u0022:17,\u0022field_key\u0022:\u0022keyed.valve_start_angle\u0022,\u0022section_key\u0022:\u0022keyed\u0022,\u0022label\u0022:\u0022Valve Hole Start Angle\u0022,\u0022sort_order\u0022:170,\u0022is_visible\u0022:true,\u0022is_highlighted\u0022:false,\u0022unit\u0022:null,\u0022decimal_places\u0022:0,\u0022help_text\u0022:null}",
+      "details": "{\"id\":17,\"field_key\":\"keyed.valve_start_angle\",\"section_key\":\"keyed\",\"label\":\"Valve Hole Start Angle\",\"sort_order\":170,\"is_visible\":true,\"is_highlighted\":false,\"unit\":null,\"decimal_places\":0,\"help_text\":null}",
       "created_at": "2026-08-05 18:43:01"
     },
     {
@@ -1408,7 +1416,7 @@
       "username": "admin",
       "action": "display.field.update",
       "entity_type": "display_field",
-      "details": "{\u0022id\u0022:12,\u0022field_key\u0022:\u0022keyed.key_width\u0022,\u0022section_key\u0022:\u0022keyed\u0022,\u0022label\u0022:\u0022Key Width\u0022,\u0022sort_order\u0022:120,\u0022is_visible\u0022:true,\u0022is_highlighted\u0022:false,\u0022unit\u0022:\u0022MM\u0022,\u0022decimal_places\u0022:1,\u0022help_text\u0022:null}",
+      "details": "{\"id\":12,\"field_key\":\"keyed.key_width\",\"section_key\":\"keyed\",\"label\":\"Key Width\",\"sort_order\":120,\"is_visible\":true,\"is_highlighted\":false,\"unit\":\"MM\",\"decimal_places\":1,\"help_text\":null}",
       "created_at": "2026-08-05 18:42:46"
     },
     {
@@ -1416,7 +1424,7 @@
       "username": "admin",
       "action": "display.field.update",
       "entity_type": "display_field",
-      "details": "{\u0022id\u0022:24,\u0022field_key\u0022:\u0022flat.valve_start_angle\u0022,\u0022section_key\u0022:\u0022flat\u0022,\u0022label\u0022:\u0022Valve Hole Start Angle\u0022,\u0022sort_order\u0022:240,\u0022is_visible\u0022:true,\u0022is_highlighted\u0022:false,\u0022unit\u0022:null,\u0022decimal_places\u0022:0,\u0022help_text\u0022:null}",
+      "details": "{\"id\":24,\"field_key\":\"flat.valve_start_angle\",\"section_key\":\"flat\",\"label\":\"Valve Hole Start Angle\",\"sort_order\":240,\"is_visible\":true,\"is_highlighted\":false,\"unit\":null,\"decimal_places\":0,\"help_text\":null}",
       "created_at": "2026-08-05 18:42:14"
     },
     {
@@ -1424,7 +1432,7 @@
       "username": "admin",
       "action": "display.field.update",
       "entity_type": "display_field",
-      "details": "{\u0022id\u0022:12,\u0022field_key\u0022:\u0022keyed.key_width\u0022,\u0022section_key\u0022:\u0022keyed\u0022,\u0022label\u0022:\u0022Key Width\u0022,\u0022sort_order\u0022:120,\u0022is_visible\u0022:true,\u0022is_highlighted\u0022:false,\u0022unit\u0022:\u0022MM\u0022,\u0022decimal_places\u0022:0,\u0022help_text\u0022:null}",
+      "details": "{\"id\":12,\"field_key\":\"keyed.key_width\",\"section_key\":\"keyed\",\"label\":\"Key Width\",\"sort_order\":120,\"is_visible\":true,\"is_highlighted\":false,\"unit\":\"MM\",\"decimal_places\":0,\"help_text\":null}",
       "created_at": "2026-08-05 18:41:54"
     },
     {
@@ -1432,7 +1440,7 @@
       "username": "admin",
       "action": "database.upload",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022manufacturing_log\u0022,\u0022name\u0022:\u0022manufacturing_log.db\u0022}",
+      "details": "{\"type\":\"manufacturing_log\",\"name\":\"manufacturing_log.db\"}",
       "created_at": "2026-08-05 18:39:47"
     },
     {
@@ -1440,7 +1448,7 @@
       "username": "admin",
       "action": "database.upload",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-05 18:39:37"
     },
     {
@@ -1448,7 +1456,7 @@
       "username": "admin",
       "action": "user.create",
       "entity_type": "user",
-      "details": "{\u0022username\u0022:\u0022user\u0022,\u0022role\u0022:\u0022user\u0022}",
+      "details": "{\"username\":\"user\",\"role\":\"user\"}",
       "created_at": "2026-08-05 18:18:15"
     },
     {
@@ -1456,7 +1464,7 @@
       "username": "admin",
       "action": "database.upload",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022demo-hardware-configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"demo-hardware-configurator.db\"}",
       "created_at": "2026-08-05 18:11:46"
     },
     {
@@ -1464,7 +1472,7 @@
       "username": "admin",
       "action": "database.upload",
       "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "details": "{\"type\":\"hardware_configurator\",\"name\":\"hardware_configurator.db\"}",
       "created_at": "2026-08-05 18:11:32"
     },
     {
@@ -1476,7 +1484,7 @@
       "created_at": "2026-08-05 18:11:10"
     }
   ],
-  "updatedAt": "2026-08-12T15:36:53.4815819\u002B00:00",
+  "updatedAt": "2026-08-12T15:56:06.964Z",
   "referenceDisplays": {
     "actuators": [
       {
@@ -1994,7 +2002,7 @@
     ]
   },
   "configuratorSettings": {
-    "mountingTolerance": 0.06,
+    "mountingTolerance": 0.025,
     "packingGridTolerance": 0.08,
     "angleTolerance": 0.51,
     "squareTolerance": 0.01
