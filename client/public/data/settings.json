@@ -633,15 +633,15 @@
       "source_type": "manufacturing_log",
       "original_file_name": "manufacturing_log.db",
       "file_size_bytes": 110592,
-      "uploaded_at": "2026-08-13 16:08:54",
+      "uploaded_at": "2026-08-13 16:15:07",
       "validation_status": "valid",
-      "sha": "0b7ade9d09db75102321b5ccfefcbf3998a4e9d2",
+      "sha": "e27a34f80a4405b07edcad77aee4b6be53e7a07d",
       "validationReport": {
         "valid": true,
         "sourceType": "manufacturing_log",
         "integrityCheck": "ok",
         "rowCounts": {
-          "manufacturing_log": 247
+          "manufacturing_log": 248
         },
         "issues": [],
         "details": {
@@ -651,6 +651,14 @@
     }
   ],
   "auditLogs": [
+    {
+      "id": 1786659307892,
+      "username": "Windows Uploader",
+      "action": "database.sync",
+      "entity_type": "database_source",
+      "details": "{\u0022type\u0022:\u0022manufacturing_log\u0022,\u0022name\u0022:\u0022manufacturing_log.db\u0022}",
+      "created_at": "2026-08-13 16:15:07"
+    },
     {
       "id": 1786658934726,
       "username": "Windows Uploader",
@@ -1668,7 +1676,7 @@
       "created_at": "2026-08-05 18:11:10"
     }
   ],
-  "updatedAt": "2026-08-13T22:08:54.7269384\u002B00:00",
+  "updatedAt": "2026-08-13T22:15:07.8923069\u002B00:00",
   "referenceDisplays": {
     "actuators": [
       {
