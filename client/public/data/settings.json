@@ -633,15 +633,15 @@
       "source_type": "manufacturing_log",
       "original_file_name": "manufacturing_log.db",
       "file_size_bytes": 122880,
-      "uploaded_at": "2026-09-04 12:41:59",
+      "uploaded_at": "2026-09-04 12:45:59",
       "validation_status": "valid",
-      "sha": "581a2b1dc23b807b4af70906ff0f5d36764807ca",
+      "sha": "5755fece6715aea43168f3ae8a9bf56781b1c5a4",
       "validationReport": {
         "valid": true,
         "sourceType": "manufacturing_log",
         "integrityCheck": "ok",
         "rowCounts": {
-          "manufacturing_log": 290
+          "manufacturing_log": 291
         },
         "issues": [],
         "details": {
@@ -651,6 +651,14 @@
     }
   ],
   "auditLogs": [
+    {
+      "id": 1788547559011,
+      "username": "Windows Uploader",
+      "action": "database.sync",
+      "entity_type": "database_source",
+      "details": "{\u0022type\u0022:\u0022manufacturing_log\u0022,\u0022name\u0022:\u0022manufacturing_log.db\u0022}",
+      "created_at": "2026-09-04 12:45:59"
+    },
     {
       "id": 1788547319466,
       "username": "Windows Uploader",
@@ -2242,17 +2250,9 @@
       "entity_type": "database_source",
       "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
       "created_at": "2026-08-11 09:45:50"
-    },
-    {
-      "id": 1786395155998,
-      "username": "Windows Uploader",
-      "action": "database.sync",
-      "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022manufacturing_log\u0022,\u0022name\u0022:\u0022manufacturing_log.db\u0022}",
-      "created_at": "2026-08-10 14:52:35"
     }
   ],
-  "updatedAt": "2026-09-04T18:41:59.4667906\u002B00:00",
+  "updatedAt": "2026-09-04T18:45:59.0118410\u002B00:00",
   "referenceDisplays": {
     "actuators": [
       {
