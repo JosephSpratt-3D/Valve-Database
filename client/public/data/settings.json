@@ -628,17 +628,17 @@
       "source_type": "hardware_configurator",
       "original_file_name": "hardware_configurator.db",
       "file_size_bytes": 151552,
-      "uploaded_at": "2026-09-04 11:49:59",
+      "uploaded_at": "2026-09-04 11:59:58",
       "validation_status": "valid",
-      "sha": "8d6c068942f86c04f93881004daa949e600f33f4",
+      "sha": "b8eed1270e8f2560b36ec78c7db7055de8f6254b",
       "validationReport": {
         "valid": true,
         "sourceType": "hardware_configurator",
         "integrityCheck": "ok",
         "rowCounts": {
-          "valves": 168,
+          "valves": 169,
           "valve_keyed_stems": 118,
-          "valve_flat_stems": 50,
+          "valve_flat_stems": 51,
           "actuator_sets": 20,
           "bracket_patterns": 16,
           "universal_adapters": 6
@@ -651,6 +651,14 @@
     }
   ],
   "auditLogs": [
+    {
+      "id": 1788544798966,
+      "username": "Windows Uploader",
+      "action": "database.sync",
+      "entity_type": "database_source",
+      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "created_at": "2026-09-04 11:59:58"
+    },
     {
       "id": 1788544199068,
       "username": "Windows Uploader",
@@ -2242,17 +2250,9 @@
       "entity_type": "database_source",
       "details": "{\u0022type\u0022:\u0022manufacturing_log\u0022,\u0022name\u0022:\u0022manufacturing_log.db\u0022}",
       "created_at": "2026-08-10 14:34:41"
-    },
-    {
-      "id": 1786394076744,
-      "username": "Windows Uploader",
-      "action": "database.sync",
-      "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
-      "created_at": "2026-08-10 14:34:36"
     }
   ],
-  "updatedAt": "2026-09-04T17:49:59.0684198\u002B00:00",
+  "updatedAt": "2026-09-04T17:59:58.9667395\u002B00:00",
   "referenceDisplays": {
     "actuators": [
       {
