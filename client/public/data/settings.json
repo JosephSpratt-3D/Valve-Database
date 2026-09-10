@@ -628,9 +628,9 @@
       "source_type": "hardware_configurator",
       "original_file_name": "hardware_configurator.db",
       "file_size_bytes": 151552,
-      "uploaded_at": "2026-09-10 08:32:17",
+      "uploaded_at": "2026-09-10 08:36:17",
       "validation_status": "valid",
-      "sha": "b570c60b12479a5f6b63a387d9ed576732af6292",
+      "sha": "dead63c954b7f4057f4cbddb17cd2076d47ba4f9",
       "validationReport": {
         "valid": true,
         "sourceType": "hardware_configurator",
@@ -651,6 +651,14 @@
     }
   ],
   "auditLogs": [
+    {
+      "id": 1789050977333,
+      "username": "Windows Uploader",
+      "action": "database.sync",
+      "entity_type": "database_source",
+      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "created_at": "2026-09-10 08:36:17"
+    },
     {
       "id": 1789050737304,
       "username": "Windows Uploader",
@@ -2242,17 +2250,9 @@
       "entity_type": "configurator_settings",
       "details": "{\u0022mountingTolerance\u0022:0.06,\u0022packingGridTolerance\u0022:0.08,\u0022angleTolerance\u0022:0.51,\u0022squareTolerance\u0022:0.01}",
       "created_at": "2026-08-12 14:59:30"
-    },
-    {
-      "id": 1786495064638,
-      "username": "admin",
-      "action": "configurator.tolerances.update",
-      "entity_type": "configurator_settings",
-      "details": "{\u0022mountingTolerance\u0022:0.05,\u0022packingGridTolerance\u0022:0.08,\u0022angleTolerance\u0022:0.51,\u0022squareTolerance\u0022:0.01}",
-      "created_at": "2026-08-12 00:37:44"
     }
   ],
-  "updatedAt": "2026-09-10T14:32:17.3044634\u002B00:00",
+  "updatedAt": "2026-09-10T14:36:17.3330079\u002B00:00",
   "referenceDisplays": {
     "actuators": [
       {
