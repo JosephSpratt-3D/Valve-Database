@@ -605,26 +605,6 @@
   ],
   "databaseSources": [
     {
-      "source_type": "manufacturing_log",
-      "original_file_name": "manufacturing_log.db",
-      "file_size_bytes": 126976,
-      "uploaded_at": "2026-09-10 08:26:17",
-      "validation_status": "valid",
-      "sha": "7bde3f91a072c812d62191e17504580cdc88386f",
-      "validationReport": {
-        "valid": true,
-        "sourceType": "manufacturing_log",
-        "integrityCheck": "ok",
-        "rowCounts": {
-          "manufacturing_log": 301
-        },
-        "issues": [],
-        "details": {
-          "windowsUploaderValidation": true
-        }
-      }
-    },
-    {
       "source_type": "hardware_configurator",
       "original_file_name": "hardware_configurator.db",
       "file_size_bytes": 151552,
@@ -648,9 +628,37 @@
           "windowsUploaderValidation": true
         }
       }
+    },
+    {
+      "source_type": "manufacturing_log",
+      "original_file_name": "manufacturing_log.db",
+      "file_size_bytes": 126976,
+      "uploaded_at": "2026-09-10 08:40:17",
+      "validation_status": "valid",
+      "sha": "c6d90922c5636c12bb0bc22dcaf267b7d73ad047",
+      "validationReport": {
+        "valid": true,
+        "sourceType": "manufacturing_log",
+        "integrityCheck": "ok",
+        "rowCounts": {
+          "manufacturing_log": 302
+        },
+        "issues": [],
+        "details": {
+          "windowsUploaderValidation": true
+        }
+      }
     }
   ],
   "auditLogs": [
+    {
+      "id": 1789051217022,
+      "username": "Windows Uploader",
+      "action": "database.sync",
+      "entity_type": "database_source",
+      "details": "{\u0022type\u0022:\u0022manufacturing_log\u0022,\u0022name\u0022:\u0022manufacturing_log.db\u0022}",
+      "created_at": "2026-09-10 08:40:17"
+    },
     {
       "id": 1789050977333,
       "username": "Windows Uploader",
@@ -2242,17 +2250,9 @@
       "entity_type": "database_source",
       "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
       "created_at": "2026-08-12 09:04:53"
-    },
-    {
-      "id": 1786546770305,
-      "username": "admin",
-      "action": "configurator.tolerances.update",
-      "entity_type": "configurator_settings",
-      "details": "{\u0022mountingTolerance\u0022:0.06,\u0022packingGridTolerance\u0022:0.08,\u0022angleTolerance\u0022:0.51,\u0022squareTolerance\u0022:0.01}",
-      "created_at": "2026-08-12 14:59:30"
     }
   ],
-  "updatedAt": "2026-09-10T14:36:17.3330079\u002B00:00",
+  "updatedAt": "2026-09-10T14:40:17.0228799\u002B00:00",
   "referenceDisplays": {
     "actuators": [
       {
