@@ -628,9 +628,9 @@
       "source_type": "hardware_configurator",
       "original_file_name": "hardware_configurator.db",
       "file_size_bytes": 155648,
-      "uploaded_at": "2026-09-24 13:39:07",
+      "uploaded_at": "2026-09-24 13:51:08",
       "validation_status": "valid",
-      "sha": "400549a7b9d7727143139db418408a05a1e6a20a",
+      "sha": "99443d5a1fc50641e63aa1257c1442b395b2c6b6",
       "validationReport": {
         "valid": true,
         "sourceType": "hardware_configurator",
@@ -651,6 +651,14 @@
     }
   ],
   "auditLogs": [
+    {
+      "id": 1790279468730,
+      "username": "Windows Uploader",
+      "action": "database.sync",
+      "entity_type": "database_source",
+      "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
+      "created_at": "2026-09-24 13:51:08"
+    },
     {
       "id": 1790278747812,
       "username": "Windows Uploader",
@@ -2242,17 +2250,9 @@
       "entity_type": "database_source",
       "details": "{\u0022type\u0022:\u0022hardware_configurator\u0022,\u0022name\u0022:\u0022hardware_configurator.db\u0022}",
       "created_at": "2026-09-04 11:32:00"
-    },
-    {
-      "id": 1788457325706,
-      "username": "Windows Uploader",
-      "action": "database.sync",
-      "entity_type": "database_source",
-      "details": "{\u0022type\u0022:\u0022manufacturing_log\u0022,\u0022name\u0022:\u0022manufacturing_log.db\u0022}",
-      "created_at": "2026-09-03 11:42:05"
     }
   ],
-  "updatedAt": "2026-09-24T19:39:07.8125299\u002B00:00",
+  "updatedAt": "2026-09-24T19:51:08.7302355\u002B00:00",
   "referenceDisplays": {
     "actuators": [
       {
